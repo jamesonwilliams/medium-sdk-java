@@ -18,7 +18,7 @@ package com.medium.api.dependencies;
 import java.io.IOException;
 
 /**
- * A generic interface describing a JSON Serializer.
+ * A generic interface describing a JSON Converter.
  *
  * This is in place to help isolate other components from dependencies
  * on specific implementations of JSON libaries.
@@ -27,7 +27,7 @@ import java.io.IOException;
  * merely a hat-tip to their API design. In fact, we implement this
  * interface with Jackson.
  */
-public interface JsonSerializer {
+public interface JsonConverter {
 
     /**
      * Deserializes the provided JSON into an object of the given type.
@@ -59,5 +59,4 @@ public interface JsonSerializer {
      */
     public String toJson(final Object object)
             throws IOException;
-
 }

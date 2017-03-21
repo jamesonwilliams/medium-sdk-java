@@ -20,13 +20,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 /**
- * JacksonSerializer is a Jackson-library implementation of a
- * JsonSerializer.
+ * JacksonJsonConverter is a Jackson-library implementation of a
+ * JsonConverter.
  */
-public class JacksonSerializer implements JsonSerializer {
+public class JacksonJsonConverter implements JsonConverter {
     private final ObjectMapper mapper;
 
-    public JacksonSerializer(final ObjectMapper mapper) {
+    public JacksonJsonConverter(final ObjectMapper mapper) {
         this.mapper = mapper;
     }
 

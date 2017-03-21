@@ -29,29 +29,38 @@ import java.util.List;
  */
 public class MediumClient implements Medium {
 
+    /**
+     * Constructs a new MediumClient.
+     */
     public MediumClient() {
     }
 
+    @Override
     public User getUser() {
         return null;
     }
 
+    @Override
     public List<Publication> listPublications() {
         return null;
     }
 
+    @Override
     public List<Contributor> listPublicationContributors() {
         return null;
     }
 
+    @Override
     public Post publishPost(Submission submission) {
         return null;
     }
 
+    @Override
     public Post publishPost(Submission submission, Publication publication) {
         return null;
     }
 
+    @Override
     public Image uploadImage() {
         return null;
     }

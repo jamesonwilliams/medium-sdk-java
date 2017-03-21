@@ -15,6 +15,10 @@
  */
 package com.medium.api.model;
 
+/**
+ * A Contributor contributes to a publication under a Role. The types of
+ * roles that the contributor may assume are defined here.
+ */
 public enum Role {
 
     EDITOR("editor"),

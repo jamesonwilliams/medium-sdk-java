@@ -29,25 +29,6 @@ import java.util.Date;
 public class Post {
 
     /**
-     * Constructs a new immutable instance of a Post from an
-     * appropriately configured Builder.
-     *
-     * @param builder the builder from which to collect post attributes
-     */
-    private Post(final Builder builder) {
-        this.id = builder.id;
-        this.title = builder.title;
-        this.authorId = builder.authorId;
-        this.tags = builder.tags;
-        this.url = builder.url;
-        this.canonicalUrl = builder.canonicalUrl;
-        this.publishStatus = builder.publishStatus;
-        this.publishedAt = builder.publishedAt;
-        this.license = builder.license;
-        this.licenseUrl = builder.licenseUrl;
-    }
-
-    /**
      * A unique identifier for the post.
      */
     private String id;
@@ -97,6 +78,25 @@ public class Post {
      * The URL to license of the post.
      */
     private String licenseUrl;
+
+    /**
+     * Constructs a new immutable instance of a Post from an
+     * appropriately configured Builder.
+     *
+     * @param builder the builder from which to collect post attributes
+     */
+    private Post(final Builder builder) {
+        this.id = builder.id;
+        this.title = builder.title;
+        this.authorId = builder.authorId;
+        this.tags = builder.tags;
+        this.url = builder.url;
+        this.canonicalUrl = builder.canonicalUrl;
+        this.publishStatus = builder.publishStatus;
+        this.publishedAt = builder.publishedAt;
+        this.license = builder.license;
+        this.licenseUrl = builder.licenseUrl;
+    }
 
     /**
      * Gets the unique identifier for the post.
@@ -309,7 +309,7 @@ public class Post {
         /**
          * Sets the URL to the full text of the post's license.
          *
-         * @param the URL to the license of the post
+         * @param licenseUrl the URL to the license of the post
          *
          * @return the updated instance of the builder
          */

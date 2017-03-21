@@ -61,7 +61,7 @@ public interface Medium {
     /**
      * Creates a post under the authenticated user’s profile.
      *
-     * @param request the publication request
+     * @param submission the publication request
      *
      * @return the newly published post
      */
@@ -89,6 +89,8 @@ public interface Medium {
      *
      * Unlike other API endpoints, this requires multipart form-encoded
      * data.
+     *
+     * @return a represenation of the image that was uploaded
      */
     Image uploadImage();
 }

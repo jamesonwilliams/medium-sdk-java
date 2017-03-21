@@ -15,8 +15,13 @@
  */
 package com.medium.api.model;
 
+/**
+ * A contributor is any Medium user other than the authenticated user
+ * who makes contributions to a publication associated with the
+ * authenticated user.
+ */
 public class Contributor {
-    
+
     /**
      *  An ID for the publication.
      */
@@ -29,7 +34,7 @@ public class Contributor {
 
     /**
      * Role of the user identified by userId in the publication
-     * identified by publicationId. 
+     * identified by publicationId.
      */
     private final Role role;
 

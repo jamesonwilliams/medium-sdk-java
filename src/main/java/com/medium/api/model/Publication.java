@@ -22,21 +22,6 @@ package com.medium.api.model;
 public class Publication {
 
     /**
-     * Constructs a new immutable instance of Publication from a
-     * Publication.Builder.
-     *
-     * @param builder the builder from which publication attributes are
-     *                taken, to construct this publication instance
-     */
-    private Publication(final Builder builder) {
-        this.id = builder.id;
-        this.name = builder.name;
-        this.description = builder.description;
-        this.url = url;
-        this.imageUrl = imageUrl;
-    }
-
-    /**
      * A unique identifier for the publication.
      */
     private String id;
@@ -60,6 +45,21 @@ public class Publication {
      * The URL to the publication’s image/logo.
      */
     private String imageUrl;
+
+    /**
+     * Constructs a new immutable instance of Publication from a
+     * Publication.Builder.
+     *
+     * @param builder the builder from which publication attributes are
+     *                taken, to construct this publication instance
+     */
+    private Publication(final Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.description = builder.description;
+        this.url = builder.url;
+        this.imageUrl = builder.imageUrl;
+    }
 
     /**
      * Gets the unique identifier for the publication.
@@ -145,7 +145,7 @@ public class Publication {
         /**
          * Sets the short description of the publication.
          *
-         * @param desription the short description of the publciation
+         * @param description the short description of the publciation
          *
          * @return the updated instance of the current builder
          */

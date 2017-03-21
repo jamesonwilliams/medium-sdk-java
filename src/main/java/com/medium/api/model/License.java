@@ -25,54 +25,54 @@ public enum License {
     /**
      * https://tldrlegal.com/license/all-rights-served
      */
-	ALL_RIGHTS_RESERVED("all-rights-reserved"),
+    ALL_RIGHTS_RESERVED("all-rights-reserved"),
 
     /**
      * Creative Commons Attribution Only.
      */
-	CC_40_BY("cc-40-by"),
+    CC_40_BY("cc-40-by"),
 
     /**
      * Creative Commons Attribution and Share-Alike.
      */
-	CC_40_BY_SA("cc-40-by-sa"),
+    CC_40_BY_SA("cc-40-by-sa"),
 
     /**
      * Creative Commons Attribution and No Derivative works.
      */
-	CC_40_BY_ND("cc-40-by-nd"),
-    
+    CC_40_BY_ND("cc-40-by-nd"),
+
     /**
      * Creative Commons Attribution and Non-Commercial usage.
      */
-	CC_40_BY_NC("cc-40-by-nc"),
+    CC_40_BY_NC("cc-40-by-nc"),
 
     /**
      * Creative Commons Attribution and No Derivative works and
      * Non-Commerical usage.
      */
-	CC_40_BY_NC_ND("cc-40-by-nc-nd"),
+    CC_40_BY_NC_ND("cc-40-by-nc-nd"),
 
     /**
      * Creative Commons Attribution and No Derivative works and
      * Non-Commerical usage and Share-Alike.
      */
-	CC_40_BY_NC_SA("cc-40-by-nc-sa"),
+    CC_40_BY_NC_SA("cc-40-by-nc-sa"),
 
     /**
      * Creative Commons CC0 1.0 Universal.
      */
-	CC_40_ZERO("cc-40-zero"),
+    CC_40_ZERO("cc-40-zero"),
 
     /**
      * Public domain.
      */
-	PUBLIC_DOMAIN("public-domain");
+    PUBLIC_DOMAIN("public-domain");
 
     /**
      * The type of license, stored as string.
      */
-	private final String licenseAsString;
+    private final String licenseAsString;
 
     /**
      * Converts a license string into an enumerated value.
@@ -80,9 +80,9 @@ public enum License {
      * @param licenseAsString a string representation of an enumerated
      *                        license
      */
-	private License(final String licenseAsString) {
-		this.licenseAsString = licenseAsString;
-	}	
+    private License(final String licenseAsString) {
+        this.licenseAsString = licenseAsString;
+    }
 
     @Override
     public String toString() {

@@ -35,20 +35,20 @@ public enum ContentFormat {
 
     private final String contentFormatString;
 
-     /**
-      * Gets the enumerated content format from a string representation
-      * of the same.
-      *
-      * @param contentFormatString a content format represented in a
-      *                            string
-      */
-     private ContentFormat(final String contentFormatString) {
-         this.contentFormatString = contentFormatString;
-     }
- 
-     @Override
-     public String toString() {
-         return contentFormatString;
-     }
+    /**
+     * Gets the enumerated content format from a string representation
+     * of the same.
+     *
+     * @param contentFormatString a content format represented in a
+     *                            string
+     */
+    private ContentFormat(final String contentFormatString) {
+        this.contentFormatString = contentFormatString;
+    }
+
+    @Override
+    public String toString() {
+        return contentFormatString;
+    }
 }
 

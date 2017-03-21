@@ -42,6 +42,8 @@ public class Image {
 
     /**
      * Gets the image URL.
+     *
+     * @return the URL of the image
      */
     public String getUrl() {
         return url;
@@ -49,6 +51,8 @@ public class Image {
 
     /**
      * Gets the MD5 hash of the image data.
+     *
+     * @return the MD5 hash of the image
      */
     public String getMd5() {
         return md5;

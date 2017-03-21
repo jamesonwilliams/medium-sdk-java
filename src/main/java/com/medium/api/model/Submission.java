@@ -20,7 +20,7 @@ import java.util.Collection;
 /**
  * A Submission is an immutable representation of a request to
  * Medium.com that certain content be made available as a published
- * post. 
+ * post.
  */
 public class Submission {
 

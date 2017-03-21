@@ -22,19 +22,6 @@ package com.medium.api.model;
 public class User {
 
     /**
-     * Constructs a new user from a builder.
-     *
-     * @param builder the builder from which to construct the user
-     */
-    private User(final User.Builder builder) {
-        this.id = builder.id;
-        this.userName = builder.userName;
-        this.name = builder.name;
-        this.url = builder.url;
-        this.imageUrl = imageUrl;
-    }
-
-    /**
      * A unique identifier for the user.
      */
     private String id;
@@ -58,6 +45,64 @@ public class User {
      * The URL to the user’s avatar on Medium.
      */
     private String imageUrl;
+
+    /**
+     * Constructs a new user from a builder.
+     *
+     * @param builder the builder from which to construct the user
+     */
+    private User(final User.Builder builder) {
+        this.id = builder.id;
+        this.userName = builder.userName;
+        this.name = builder.name;
+        this.url = builder.url;
+        this.imageUrl = imageUrl;
+    }
+
+    /**
+     * Gets the unique identifier for the user.
+     *
+     * @return the user's unique identifier
+     */
+    public String getId() {
+        return id;
+    }
+
+    /**
+     * Gets the user's username on Medium.
+     *
+     * @return the user's username on Medium
+     */
+    public String getUserName() {
+        return userName;
+    }
+
+    /**
+     * Gets the user's name on Medium
+     *
+     * @return the user's name on Medium
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the URL to the user's profile on Medium.
+     *
+     * @return the URL to the user's profile on Medium
+     */
+    public String getUrl() {
+        return url;
+    }
+
+    /**
+     * Gets the URL to the user's avatar on Medium.
+     *
+     * @return the URL to user's avatar on Medium
+     */
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
     /**
      * User.Builder provides a simplified method of constructing

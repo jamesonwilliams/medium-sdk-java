@@ -22,7 +22,7 @@ public enum PublishStatus {
 
     /**
      * Public stories may be distributed in streams, Medium digests, or
-     * directly through their URL. 
+     * directly through their URL.
      */
     PUBLIC("public"),
 

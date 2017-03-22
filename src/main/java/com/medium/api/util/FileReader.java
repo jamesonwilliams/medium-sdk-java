@@ -24,7 +24,7 @@ import java.nio.file.Paths;
  * FileReader is a simple utility to read the contents of a file.
  */
 public final class FileReader {
-    
+
     /**
      * Reads and returns the contents of the file at the given path.
      *

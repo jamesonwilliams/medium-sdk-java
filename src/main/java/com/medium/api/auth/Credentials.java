@@ -15,6 +15,9 @@
  */
 package com.medium.api.auth;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * OAuth2 authorization credentials for Medium endpoint.
  *
@@ -38,8 +41,10 @@ public class Credentials {
      * @param clientId the oauth2 client id
      * @param clientSecret the oauth2 client secret
      */
+    @JsonCreator
     public Credentials(
-            final String clientId, final String clientSecret) {
+            @JsonProperty("clientId") final String clientId,
+            @JsonProperty("clientSecret") final String clientSecret) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
     }

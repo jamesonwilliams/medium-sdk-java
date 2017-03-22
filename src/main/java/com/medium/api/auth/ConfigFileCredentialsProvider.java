@@ -16,6 +16,7 @@
 package com.medium.api.auth;
 
 import com.medium.api.config.ConfigFile;
+import com.medium.api.dependencies.JacksonJsonConverter;
 import com.medium.api.dependencies.JsonConverter;
 import com.medium.api.util.FileReader;
 
@@ -54,7 +55,18 @@ public class ConfigFileCredentialsProvider implements CredentialsProvider {
      * @param configFilePath
      *        the path to the file containing the credentials
      */
-    public ConfigFileCredentialsProvider(
+    public ConfigFileCredentialsProvider(final String configFilePath) {
+        this(configFilePath, new JacksonJsonConverter());
+    }
+
+    /**
+     * Constructs a new ConfigFileCredentialsProvider.
+     *
+     * @param configFilePath
+     *        the path to the file containing the credentials
+     * @param jsonConveter an alternate implementation of JsonConveter
+     */
+    protected ConfigFileCredentialsProvider(
             final String configFilePath,
             final JsonConverter jsonConverter) {
 

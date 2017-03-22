@@ -15,6 +15,9 @@
  */
 package com.medium.api.config;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import com.medium.api.auth.Credentials;
 
 /**
@@ -43,9 +46,10 @@ public class ConfigFile {
      * @param redirectUri the callback uri accessed when a user
      *                    completes a login dialog.
      */
+    @JsonCreator
     public ConfigFile(
-            final Credentials credentials,
-            final String redirectUri) {
+            @JsonProperty("credentials") final Credentials credentials,
+            @JsonProperty("redirectUri") final String redirectUri) {
 
         this.credentials = credentials;
         this.redirectUri = redirectUri;

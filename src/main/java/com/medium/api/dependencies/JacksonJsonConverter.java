@@ -26,7 +26,19 @@ import java.io.IOException;
 public class JacksonJsonConverter implements JsonConverter {
     private final ObjectMapper mapper;
 
-    public JacksonJsonConverter(final ObjectMapper mapper) {
+    /**
+     * Constructs a new JacksonJsonConverter.
+     */
+    public JacksonJsonConverter() {
+        this(new ObjectMapper());
+    }
+
+    /**
+     * Constructs a new JacksonJsonConverter.
+     *
+     * @param mapper the object mapper utility to user while converting
+     */
+    protected JacksonJsonConverter(final ObjectMapper mapper) {
         this.mapper = mapper;
     }
 

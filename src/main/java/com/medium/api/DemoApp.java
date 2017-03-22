@@ -16,8 +16,8 @@
 package com.medium.api;
 
 import com.medium.api.auth.AuthorizationHandler;
-import com.medium.api.auth.ConfigFileCredentialsProvider;
-import com.medium.api.auth.CredentialsProvider;
+import com.medium.api.config.ConfigFile;
+import com.medium.api.config.ConfigFileReader;
 
 import java.io.IOException;
 
@@ -25,6 +25,11 @@ import java.io.IOException;
  * Demonstrates the SDK.
  */
 public class DemoApp {
+
+    /**
+     * The location of the local config file.
+     */
+    private static final String CONFIG_FILE_PATH = "./medium-config.json";
 
     /**
      * Invokes the test program.
@@ -35,11 +40,10 @@ public class DemoApp {
      *                     authorization url
      */
     public static void main(final String[] args) throws IOException {
-        CredentialsProvider provider =
-            new ConfigFileCredentialsProvider("./medium-config.json");
+        ConfigFile config = new ConfigFileReader(CONFIG_FILE_PATH).read();
 
         AuthorizationHandler handler =
-            new AuthorizationHandler(provider.getCredentials());
+            new AuthorizationHandler(config.getCredentials(), config.getRedirectUri());
 
         openUrlInBrowser(handler.getAuthorizationUrl());
 

@@ -5,6 +5,8 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import com.medium.api.config.Endpoint;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -18,6 +20,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,15 +32,31 @@ import java.util.List;
  */
 public class AuthorizationHandler {
 
+    /**
+     * The API credentials to use when generating authorization
+     * requests.
+     */
     private final Credentials credentials;
+
+    /**
+     * The URI which the OAuth2 server calls when an authorization code
+     * is generated.
+     */
+    private final String redirectUri;
 
     /**
      * Constructs a new AuthorizationHandler.
      *
      * @param credentials the credentials to use while authenticating.
+     * @param redirectUri the URI two which the OAuth2 server will
+     *                    callback when an authorization code is
+     *                    generated
      */
-    public AuthorizationHandler(final Credentials credentials) {
+    public AuthorizationHandler(
+            final Credentials credentials, final String redirectUri) {
+
         this.credentials = credentials;
+        this.redirectUri = redirectUri;
     }
 
     /**
@@ -46,15 +65,13 @@ public class AuthorizationHandler {
      * @return the authorization URL.
      */
     public String getAuthorizationUrl() {
-        String base = "https://medium.com/m/oauth/authorize";
-        String clientId = String.format("client_id=%s", credentials.getClientId());
-        String scope = "scope=basicProfile,publishPost";
-        String state = String.format("state=%s", "whatever");
-        String responseType = "response_type=code";
-        String redirectUri = String.format("redirect_uri=%s", getRedirectUri());
-
-        return String.format("%s?%s&%s&%s&%s&%s",
-                base, clientId, scope, state, responseType, redirectUri);
+        return new AuthorizationCodeRequestBuilder()
+            .withEndpoint(Endpoint.AUTHORIZE_BASE)
+            .withClientId(credentials.getClientId())
+            .withScopes(Arrays.asList(Scope.BASIC_PROFILE, Scope.PUBLISH_POST))
+            .withState("whatever")
+            .withRedirectUri(redirectUri)
+            .asUri();
     }
 
     /**
@@ -80,15 +97,6 @@ public class AuthorizationHandler {
             System.out.println("Server startup failed. Exiting.");
             System.exit(1);
         }
-    }
-
-    /**
-     * Get the redirection URL.
-     *
-     * @return the redirect uri
-     */
-    private String getRedirectUri() {
-        return "http://127.0.0.1:9000/Callback";
     }
 
     /**
@@ -177,7 +185,7 @@ public class AuthorizationHandler {
                 oauthRequestBody.put("client_secret", credentials.getClientSecret());
                 oauthRequestBody.put("code", authorizationCode);
                 oauthRequestBody.put("grant_type", "authorization_code");
-                oauthRequestBody.put("redirect_uri", getRedirectUri());
+                oauthRequestBody.put("redirect_uri", redirectUri);
             } catch (JSONException jsonE) {
                 throw new RuntimeException(jsonE);
             }
@@ -186,7 +194,7 @@ public class AuthorizationHandler {
 
             HttpResponse<JsonNode> response;
             try {
-                String tokenEndpoint = "https://api.medium.com/v1/tokens";
+                String tokenEndpoint = Endpoint.API_BASE + "/tokens";
                 response = Unirest.post(tokenEndpoint).body(bodyNode).asJson();
             } catch (UnirestException e) {
                 System.out.println("Code exchange failed!");

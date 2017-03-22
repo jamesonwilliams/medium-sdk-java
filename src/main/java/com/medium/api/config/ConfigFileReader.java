@@ -13,19 +13,20 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package com.medium.api.auth;
+package com.medium.api.config;
 
-import com.medium.api.config.ConfigFile;
+import com.medium.api.auth.Credentials;
+import com.medium.api.auth.CredentialsNotFoundException;
+import com.medium.api.auth.CredentialsProvider;
 import com.medium.api.dependencies.JacksonJsonConverter;
 import com.medium.api.dependencies.JsonConverter;
 import com.medium.api.util.FileReader;
 
 import java.io.IOException;
-import java.security.ProviderException;
 
 /**
- * ConfigFileCredentialsProvider provides credentials by obtaining
- * them from a local configuration file.
+ * ConfigFileReader reads a configuration file and converts it to an
+ * interactable Java POJO.
  *
  * The file is expected to be in JSON and have the following contents:
  *
@@ -37,7 +38,7 @@ import java.security.ProviderException;
  *   "callbackUrl": "http://example.com/foo"
  * }
  */
-public class ConfigFileCredentialsProvider implements CredentialsProvider {
+public class ConfigFileReader implements CredentialsProvider {
 
     /**
      * A handle to the file which contains the credentials.
@@ -50,23 +51,23 @@ public class ConfigFileCredentialsProvider implements CredentialsProvider {
     private final JsonConverter jsonConverter;
 
     /**
-     * Constructs a new ConfigFileCredentialsProvider.
+     * Constructs a new ConfigFileReader.
      *
      * @param configFilePath
      *        the path to the file containing the credentials
      */
-    public ConfigFileCredentialsProvider(final String configFilePath) {
+    public ConfigFileReader(final String configFilePath) {
         this(configFilePath, new JacksonJsonConverter());
     }
 
     /**
-     * Constructs a new ConfigFileCredentialsProvider.
+     * Constructs a new ConfigFileReader.
      *
      * @param configFilePath
      *        the path to the file containing the credentials
      * @param jsonConveter an alternate implementation of JsonConveter
      */
-    protected ConfigFileCredentialsProvider(
+    protected ConfigFileReader(
             final String configFilePath,
             final JsonConverter jsonConverter) {
 
@@ -75,16 +76,27 @@ public class ConfigFileCredentialsProvider implements CredentialsProvider {
     }
 
     @Override
-    public Credentials getCredentials() {
+    public Credentials getCredentials() throws CredentialsNotFoundException {
         try {
-            final ConfigFile configFile = jsonConverter.fromJson(
-                FileReader.read(configFilePath), ConfigFile.class
-            );
-
-            return configFile.getCredentials();
+            return read().getCredentials();
         } catch (final IOException ioException) {
-            throw new ProviderException(ioException);
+            throw new CredentialsNotFoundException(ioException.getMessage());
         }
     }
+
+    /**
+     * Reads in the configuration file and makes a POJO.
+     *
+     * @return a new instance of ConfigFile which represents the
+     *         configuration file on disk.
+     *
+     * @throws IOException
+     *         If the file on disk cannot be read
+     */
+    public ConfigFile read() throws IOException {
+        return jsonConverter.fromJson(
+            FileReader.read(configFilePath), ConfigFile.class
+        );
+    };
 }
 

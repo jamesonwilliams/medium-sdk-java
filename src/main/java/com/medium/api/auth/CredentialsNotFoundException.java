@@ -15,20 +15,18 @@
  */
 package com.medium.api.auth;
 
+import java.security.ProviderException;
+
 /**
- * CredentialsProvider is a generic interface describing an actor which
- * provides credentials.
+ * CredentialsNotFoundException is thrown by a CredentialsProvider when
+ * it is unable to provide credentials.
  */
-public interface CredentialsProvider {
+public class CredentialsNotFoundException extends ProviderException {
 
     /**
-     * Gets the credentials to use while negotiating authentication with
-     * the endpoint.
-     *
-     * @return credentials to use while negotiating authentication
-     *
-     * @throws CredentialsNotFoundException
-     *         If the credentials could not be obtained
+     * Constructs a new instance of CredentialsNotFoundException.
      */
-    Credentials getCredentials() throws CredentialsNotFoundException;
+    public CredentialsNotFoundException(final String message) {
+        super(message);
+    }
 }

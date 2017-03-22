@@ -13,12 +13,21 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package com.medium.api;
+package com.medium.api.config;
 
 /**
- * Endpoint describes the Medium API Endpoint.
+ * Endpoint describes the locations of Medium HTTPS endpoints.
  */
 public class Endpoint {
-    public static final String BASE_URL = "https://api.medium.com/v1";
+
+    /**
+     * The base of all URLs that exercise the public API.
+     */
+    public static final String API_BASE = "https://api.medium.com/v1";
+
+    /**
+     * The base of the URL for browser authentication.
+     */
+    public static final String AUTHORIZE_BASE = "https://medium.com/m/oauth/authorize";
 }
 

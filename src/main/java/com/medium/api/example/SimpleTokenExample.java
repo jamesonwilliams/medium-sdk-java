@@ -25,6 +25,7 @@ import com.medium.api.config.ConfigFileReader;
 import com.medium.api.model.ContentFormat;
 import com.medium.api.model.License;
 import com.medium.api.model.Post;
+import com.medium.api.model.Publication;
 import com.medium.api.model.PublishStatus;
 import com.medium.api.model.Submission;
 import com.medium.api.model.User;
@@ -75,5 +76,9 @@ public class SimpleTokenExample {
             "Published \"%s\" to \"%s\" at %s\n",
             post.getTitle(), post.getUrl(), post.getPublishedAt()
         ));
+
+        for (Publication item : medium.listPublications(user.getId())) {
+            System.out.println(item.getName());
+        }
     }
 }

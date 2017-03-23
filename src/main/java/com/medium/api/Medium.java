@@ -86,9 +86,11 @@ public interface Medium {
      * in some way: This includes all publications the user is
      * subscribed to, writes to, or edits.
      *
+     * @param userId the id of the user
+     *
      * @return the full list of the user's publications
      */
-    List<Publication> listPublications();
+    List<Publication> listPublications(final String userId);
 
     /**
      * Lists the contributors to a publication.

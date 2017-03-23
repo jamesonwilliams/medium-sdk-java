@@ -21,7 +21,6 @@ import com.medium.api.MediumClient;
 
 import com.medium.api.auth.AccessProvider;
 import com.medium.api.auth.AccessToken;
-import com.medium.api.auth.LocalHttpAccessProvider;
 import com.medium.api.auth.Scope;
 
 import com.medium.api.config.ConfigFile;

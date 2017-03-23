@@ -14,9 +14,12 @@
  * permissions and limitations under the License.
  */
 
-package com.medium.api.auth;
+package com.medium.api.example;
 
 import com.medium.api.Medium;
+
+import com.medium.api.auth.AccessProvider;
+import com.medium.api.auth.AccessToken;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

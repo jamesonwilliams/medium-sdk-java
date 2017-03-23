@@ -19,8 +19,8 @@ package com.medium.api.config;
 import com.medium.api.auth.Credentials;
 import com.medium.api.auth.CredentialsNotFoundException;
 import com.medium.api.auth.CredentialsProvider;
-import com.medium.api.dependencies.JacksonJsonConverter;
-import com.medium.api.dependencies.JsonConverter;
+import com.medium.api.dependencies.json.JacksonModelConverter;
+import com.medium.api.dependencies.json.JsonModelConverter;
 import com.medium.api.util.FileReader;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class ConfigFileReader implements CredentialsProvider {
     /**
      * A JSON converter to use to deserialize the the JSON.
      */
-    private final JsonConverter jsonConverter;
+    private final JsonModelConverter converter;
 
     /**
      * Constructs a new ConfigFileReader.
@@ -58,7 +58,7 @@ public class ConfigFileReader implements CredentialsProvider {
      *        the path to the file containing the credentials
      */
     public ConfigFileReader(final String configFilePath) {
-        this(configFilePath, new JacksonJsonConverter());
+        this(configFilePath, new JacksonModelConverter());
     }
 
     /**
@@ -66,14 +66,15 @@ public class ConfigFileReader implements CredentialsProvider {
      *
      * @param configFilePath
      *        the path to the file containing the credentials
-     * @param jsonConveter an alternate implementation of JsonConveter
+     * @param converter
+     *        an alternate implementation of JsonModelConverter
      */
     protected ConfigFileReader(
             final String configFilePath,
-            final JsonConverter jsonConverter) {
+            final JsonModelConverter converter) {
 
         this.configFilePath = configFilePath;
-        this.jsonConverter = jsonConverter;
+        this.converter = converter;
     }
 
     @Override
@@ -95,9 +96,7 @@ public class ConfigFileReader implements CredentialsProvider {
      *         If the file on disk cannot be read
      */
     public ConfigFile read() throws IOException {
-        return jsonConverter.fromJson(
-            FileReader.read(configFilePath), ConfigFile.class
-        );
+        return converter.asConfigFile(FileReader.read(configFilePath));
     };
 }
 

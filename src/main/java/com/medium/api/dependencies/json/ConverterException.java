@@ -14,32 +14,20 @@
  * permissions and limitations under the License.
  */
 
-package com.medium.api.model;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.medium.api.dependencies.json;
 
 /**
- * Error defines an error received when making a request to the API.
+ * ConverterException is thrown by the JsonModelConverter if a JSON
+ * model cannot be converted.
  */
-public class Error extends RuntimeException {
-    /**
-     * The http status code.
-     */
-    private int code;
+public class ConverterException extends RuntimeException {
 
     /**
-     * Constructs a new Error.
+     * Constructs a new ConverterException.
      *
      * @param message the error message
-     * @param code the error code
      */
-    @JsonCreator
-    public Error(
-            @JsonProperty("code") final int code,
-            @JsonProperty("message") final String message) {
-
+    public ConverterException(final String message) {
         super(message);
-        this.code = code;
     }
 }

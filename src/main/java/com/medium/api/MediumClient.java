@@ -22,8 +22,11 @@ import com.medium.api.auth.AuthorizationCodeRequestBuilder;
 import com.medium.api.auth.Credentials;
 import com.medium.api.auth.Scope;
 
-import com.medium.api.dependencies.HttpClient;
-import com.medium.api.dependencies.UnirestClient;
+import com.medium.api.dependencies.http.HttpClient;
+import com.medium.api.dependencies.http.HttpException;
+import com.medium.api.dependencies.http.UnirestHttpClient;
+import com.medium.api.dependencies.json.JacksonModelConverter;
+import com.medium.api.dependencies.json.JsonModelConverter;
 
 import com.medium.api.model.Contributor;
 import com.medium.api.model.Image;
@@ -63,12 +66,18 @@ public class MediumClient implements Medium {
     private HttpClient httpClient;
 
     /**
+     * Serializes and deserializes objects from the data model.
+     */
+    private JsonModelConverter converter;
+
+    /**
      * Constructs a new Medium Client with client credentials.
      */
     public MediumClient(final Credentials credentials) {
         this.endpoint = Endpoint.API_BASE;
-        this.httpClient = new UnirestClient();
+        this.httpClient = new UnirestHttpClient();
         this.credentials = credentials;
+        this.converter = new JacksonModelConverter();
     }
 
     /**
@@ -79,9 +88,10 @@ public class MediumClient implements Medium {
      */
     public MediumClient(final String accessToken) {
         this.endpoint = Endpoint.API_BASE;
-        this.httpClient = new UnirestClient(accessToken);
+        this.httpClient = new UnirestHttpClient(accessToken);
         this.accessToken = accessToken;
         this.credentials = null;
+        this.converter = new JacksonModelConverter();
     }
 
     @Override
@@ -101,16 +111,22 @@ public class MediumClient implements Medium {
     public AccessToken exchangeAuthorizationCode(
             final String code, final String redirectUri) {
 
-        return httpClient.post(
-            Endpoint.API_BASE + "/tokens",
-            new AccessTokenRequest.Builder()
-                .withClientId(credentials.getClientId())
-                .withClientSecret(credentials.getClientSecret())
-                .withCode(code)
-                .withRedirectUri(redirectUri)
-                .build(),
-            AccessToken.class
-        );
+        try {
+            return converter.asAccessToken(httpClient.post(
+                Endpoint.API_BASE + "/tokens",
+                converter.asJson(new AccessTokenRequest.Builder()
+                    .withClientId(credentials.getClientId())
+                    .withClientSecret(credentials.getClientSecret())
+                    .withCode(code)
+                    .withRedirectUri(redirectUri)
+                    .build()
+                )
+            ));
+        } catch (final HttpException exception) {
+            System.out.println("Exception = " + exception.getMessage());
+        }
+
+        return null;
     }
 
     @Override
@@ -120,11 +136,19 @@ public class MediumClient implements Medium {
 
     @Override
     public User getUser() {
-        return httpClient.get(Endpoint.API_BASE + "/me", User.class);
+        try {
+            return converter.asUser(
+                httpClient.get(Endpoint.API_BASE + "/me")
+            );
+        } catch (final HttpException exception) {
+            System.out.println("Exception = " + exception.getMessage());
+        }
+
+        return null;
     }
 
     @Override
-    public List<Publication> listPublications() {
+    public List<Publication> listPublications(final String userId) {
         return null;
     }
 
@@ -135,13 +159,18 @@ public class MediumClient implements Medium {
 
     @Override
     public Post publishPost(Submission submission) {
-        return httpClient.post(
-            String.format("%s/users/%s/posts",
-                Endpoint.API_BASE, submission.getUserId()
-            ),
-            submission,
-            Post.class
-        );
+        try {
+            return converter.asPost(httpClient.post(
+                String.format("%s/users/%s/posts",
+                    Endpoint.API_BASE, submission.getUserId()
+                ),
+                converter.asJson(submission)
+            ));
+        } catch (final HttpException exception) {
+            System.out.println("Exception = " + exception.getMessage());
+        }
+
+        return null;
     }
 
     @Override

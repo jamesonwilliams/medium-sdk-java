@@ -14,32 +14,38 @@
  * permissions and limitations under the License.
  */
 
-package com.medium.api.model;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+package com.medium.api.dependencies.http;
 
 /**
- * Error defines an error received when making a request to the API.
+ * An HttpException is throws when the HttpClient fails to execute a
+ * request and obtain a response (having achieved a stauts code in the
+ * 200 series.)
  */
-public class Error extends RuntimeException {
+public class HttpException extends RuntimeException {
+    
     /**
-     * The http status code.
+     * The HTTP status code, if available.
      */
-    private int code;
+    private final int code;
 
     /**
-     * Constructs a new Error.
+     * Constructs a new HttpException.
      *
-     * @param message the error message
-     * @param code the error code
+     * @param code the HTTP status code, if avaialable
+     * @param message the reason for the exception
      */
-    @JsonCreator
-    public Error(
-            @JsonProperty("code") final int code,
-            @JsonProperty("message") final String message) {
-
+    public HttpException(final int code, final String message) {
         super(message);
         this.code = code;
     }
+
+    /**
+     * Gets the status code.
+     *
+     * @return the status code
+     */
+    public int getCode() {
+        return code;
+    }
 }
+

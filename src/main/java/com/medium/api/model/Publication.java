@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Publication is an immutable representation of a Publication channel
  * on Medium.
@@ -46,6 +49,30 @@ public class Publication {
      * The URL to the publication’s image/logo.
      */
     private String imageUrl;
+
+    /**
+     * Constructs a new Publication.
+     *
+     * @param id the publication id
+     * @param name the publication name
+     * @param description the publication description
+     * @param url the publication url
+     * @param url the url of the publication image/icon
+     */
+    @JsonCreator
+    public Publication(
+            @JsonProperty("id") final String id,
+            @JsonProperty("name") final String name,
+            @JsonProperty("description") final String description,
+            @JsonProperty("url") final String url,
+            @JsonProperty("imageUrl") final String imageUrl) {
+
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.url = url;
+        this.imageUrl = imageUrl;
+    }
 
     /**
      * Constructs a new immutable instance of Publication from a

@@ -16,6 +16,8 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Collection;
 
 /**
@@ -24,6 +26,12 @@ import java.util.Collection;
  * post.
  */
 public class Submission {
+
+    /**
+     * The id of the user account this submission is going to.
+     */
+    @JsonIgnore
+    private final String userId;
 
     /**
      * The metadata title of the submission.
@@ -75,6 +83,7 @@ public class Submission {
      *                attributes will be taken
      */
     private Submission(final Builder builder) {
+        this.userId = builder.userId;
         this.title = builder.title;
         this.contentFormat = builder.contentFormat;
         this.content = builder.content;
@@ -83,6 +92,15 @@ public class Submission {
         this.publishStatus = builder.publishStatus;
         this.license = builder.license;
         this.notifyFollowers = builder.notifyFollowers;
+    }
+
+    /**
+     * Gets the id of the user for which we making the submission.
+     *
+     * @return the user id assocaited with the submission
+     */
+    public String getUserId() {
+        return userId;
     }
 
     /**
@@ -156,7 +174,7 @@ public class Submission {
      * @return true if the followers should be notified on publication
      *         of submission; false, otherwise.
      */
-    public boolean getNofifyFollowers() {
+    public boolean getNotifyFollowers() {
         return notifyFollowers;
     }
 
@@ -165,6 +183,7 @@ public class Submission {
      */
     public static class Builder {
 
+        private String userId;
         private String title;
         private ContentFormat contentFormat;
         private String content;
@@ -173,6 +192,19 @@ public class Submission {
         private PublishStatus publishStatus;
         private License license;
         private boolean notifyFollowers;
+
+        /**
+         * Sets the id of the user to whose account this submission is
+         * directed.
+         *
+         * @param userId the id of the user
+         *
+         * @return the updated instance of the submission builder
+         */
+        public Builder withUserId(final String userId) {
+            this.userId = userId;
+            return this;
+        }
 
         /**
          * Sets the metadata title to associated with the submission

@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The types of images that can be uploaded.
  */
@@ -48,10 +51,12 @@ public enum ImageType {
      *
      * @param imageTypeString an image type represented as a string
      */
+    @JsonCreator
     private ImageType(final String imageTypeString) {
         this.imageTypeString = imageTypeString;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return imageTypeString;

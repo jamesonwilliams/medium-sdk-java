@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collection;
 import java.util.Date;
 
@@ -32,53 +35,92 @@ public class Post {
     /**
      * A unique identifier for the post.
      */
-    private String id;
+    private final String id;
 
     /**
      * The post's title.
      */
-    private String title;
+    private final String title;
 
     /**
      * The user id of the post's author.
      */
-    private String authorId;
+    private final String authorId;
 
     /**
      * The post's tags.
      */
-    private Collection<String> tags;
+    private final Collection<String> tags;
 
     /**
      * The URL of the post on Medium.
      */
-    private String url;
+    private final String url;
 
     /**
      * The URL of the original publication of the post content, if
      * existant.
      */
-    private String canonicalUrl;
+    private final String canonicalUrl;
 
     /**
      * The publish status of the post.
      */
-    private PublishStatus publishStatus;
+    private final PublishStatus publishStatus;
 
     /**
      * The post's published date, if publish status is not draft.
      */
-    private Date publishedAt;
+    private final Date publishedAt;
 
     /**
      * The license of the post.
      */
-    private License license;
+    private final License license;
 
     /**
      * The URL to license of the post.
      */
-    private String licenseUrl;
+    private final String licenseUrl;
+
+    /**
+     * Long args constructor mostly only for JSON serialization.
+     *
+     * @param id the post id
+     * @param title the post title
+     * @param authorId the id of the author of the post
+     * @param tags the tags assocaited to the post
+     * @param url the url of the post on Medium
+     * @param canonicalUrl the URL to the content's original publication
+     *                     location
+     * @param publishStatus the post publish status
+     * @param publishAt the date of publication
+     * @param license the license associated with the post
+     * @param licenseUrl the url to the license
+     */
+    @JsonCreator
+    public Post(
+            @JsonProperty("id") final String id,
+            @JsonProperty("title") final String title,
+            @JsonProperty("authorId") final String authorId,
+            @JsonProperty("tags") final Collection<String> tags,
+            @JsonProperty("url") final String url,
+            @JsonProperty("canonicalUrl") final String canonicalUrl,
+            @JsonProperty("publishStatus") final PublishStatus publishStatus,
+            @JsonProperty("publishedAt") final Date publishedAt,
+            @JsonProperty("license") final License license,
+            @JsonProperty("licenseUrl") final String licenseUrl) {
+        this.id = id;
+        this.title = title;
+        this.authorId = authorId;
+        this.tags = tags;
+        this.url = url;
+        this.canonicalUrl = canonicalUrl;
+        this.publishStatus = publishStatus;
+        this.publishedAt = publishedAt;
+        this.license = license;
+        this.licenseUrl = licenseUrl;
+    }
 
     /**
      * Constructs a new immutable instance of a Post from an

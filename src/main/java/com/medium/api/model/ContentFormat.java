@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Content formats (as per a Submission) supported by Medium.
  */
@@ -43,10 +46,12 @@ public enum ContentFormat {
      * @param contentFormatString a content format represented in a
      *                            string
      */
+    @JsonCreator
     private ContentFormat(final String contentFormatString) {
         this.contentFormatString = contentFormatString;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return contentFormatString;

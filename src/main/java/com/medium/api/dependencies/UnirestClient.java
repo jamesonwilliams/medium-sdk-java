@@ -19,6 +19,7 @@ package com.medium.api.dependencies;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -111,11 +112,10 @@ public class UnirestClient extends Unirest implements HttpClient {
      *         otherwise, just return data.
      */
     private JSONObject maybeUnwrap(final JSONObject data) {
-        final JSONObject dataInsideEnvelope =
-            data.getJSONObject(ENVELOPE_FIELD_NAME);
-
-        if (null != dataInsideEnvelope) {
-            return dataInsideEnvelope;
+        try {
+            return data.getJSONObject(ENVELOPE_FIELD_NAME);
+        } catch (JSONException jsonException) {
+            // nope, wasn't wrapped.
         }
 
         return data;

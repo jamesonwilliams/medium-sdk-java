@@ -135,7 +135,13 @@ public class MediumClient implements Medium {
 
     @Override
     public Post publishPost(Submission submission) {
-        return null;
+        return httpClient.post(
+            String.format("%s/users/%s/posts",
+                Endpoint.API_BASE, submission.getUserId()
+            ),
+            submission,
+            Post.class
+        );
     }
 
     @Override

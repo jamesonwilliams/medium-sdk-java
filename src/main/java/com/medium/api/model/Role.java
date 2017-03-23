@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * A Contributor contributes to a publication under a Role. The types of
  * roles that the contributor may assume are defined here.
@@ -33,10 +36,12 @@ public enum Role {
      *
      * @param the name of the role
      */
+    @JsonCreator
     private Role(final String roleName) {
         this.roleName = roleName;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return roleName;

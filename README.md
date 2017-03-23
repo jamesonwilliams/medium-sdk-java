@@ -53,9 +53,32 @@ credentials.
 To get the details of your Medium user account, just do:
 
     ConfigFile config = new ConfigFileReader("./medium-config.json").read();
-    Medium medium = new MediumClient(config.getAccessToken());
-    User user = medium.getUser();
 
+    Medium medium = new MediumClient(config.getAccessToken());
+
+    User user = medium.getUser();
+    System.out.println("Hello, " + user.getName());
+
+To publish a post:
+
+    // Submit a post for publication.
+    Submission submission = new Submission.Builder()
+        .withUserId(user.getId())
+        .withTitle("A Great Day for a Java SDK!")
+        .withContentFormat(ContentFormat.MARKDOWN)
+        .withContent("```Medium medium = new MediumClient(TOKEN);```")
+        .withTags(Arrays.asList("sdk"))
+        .withPublishStatus(PublishStatus.UNLISTED)
+        .withLicense(License.CC_40_BY)
+        .withNotifyFollowers(false) // Just a test!
+        .build();
+
+    Post post = medium.publishPost(submission);
+
+    System.out.println(String.format(
+        "Published \"%s\" to \"%s\" at %s\n",
+        post.getTitle(), post.getUrl(), post.getPublishedAt()
+    ));
 
 ## Dependencies
 

@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * License types known to / supported by Medium.com.
  *
@@ -81,10 +84,12 @@ public enum License {
      * @param licenseAsString a string representation of an enumerated
      *                        license
      */
+    @JsonCreator
     private License(final String licenseAsString) {
         this.licenseAsString = licenseAsString;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return licenseAsString;

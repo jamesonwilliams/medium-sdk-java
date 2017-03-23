@@ -22,7 +22,15 @@ import com.medium.api.MediumClient;
 import com.medium.api.config.ConfigFile;
 import com.medium.api.config.ConfigFileReader;
 
+import com.medium.api.model.ContentFormat;
+import com.medium.api.model.License;
+import com.medium.api.model.Post;
+import com.medium.api.model.PublishStatus;
+import com.medium.api.model.Submission;
+import com.medium.api.model.User;
+
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * A simple example of using an API token make a request.
@@ -39,11 +47,33 @@ public class SimpleTokenExample {
      */
     public static void main(final String[] args) throws IOException {
 
+        // Get configuration information form local config file.
         ConfigFile config = new ConfigFileReader("./medium-config.json").read();
-        final String accessToken = config.getAccessToken();
 
-        Medium medium = new MediumClient(accessToken);
+        // Obtain a handle to the Medium API.
+        Medium medium = new MediumClient(config.getAccessToken());
 
-        System.out.println(medium.getUser());
+        // Get information about the user.
+        User user = medium.getUser();
+        System.out.println("Hello, " + user.getName());
+
+        // Submit a post for publication.
+        Submission submission = new Submission.Builder()
+            .withUserId(user.getId())
+            .withTitle("A Great Day for a Java SDK!")
+            .withContentFormat(ContentFormat.MARKDOWN)
+            .withContent("```Medium medium = new MediumClient(TOKEN);```")
+            .withTags(Arrays.asList("sdk"))
+            .withPublishStatus(PublishStatus.UNLISTED)
+            .withLicense(License.CC_40_BY)
+            .withNotifyFollowers(false) // Just a test!
+            .build();
+
+        Post post = medium.publishPost(submission);
+
+        System.out.println(String.format(
+            "Published \"%s\" to \"%s\" at %s\n",
+            post.getTitle(), post.getUrl(), post.getPublishedAt()
+        ));
     }
 }

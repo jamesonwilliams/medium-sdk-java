@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The publishing status of a submission or post.
  */
@@ -47,10 +50,12 @@ public enum PublishStatus {
      * Gets the enumerated publish status from a string representation
      * of the same.
      */
+    @JsonCreator
     private PublishStatus(final String publishStatusString) {
         this.publishStatusString = publishStatusString;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return publishStatusString;

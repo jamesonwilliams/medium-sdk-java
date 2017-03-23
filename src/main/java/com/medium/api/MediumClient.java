@@ -15,6 +15,15 @@
  */
 package com.medium.api;
 
+import com.medium.api.auth.AccessToken;
+import com.medium.api.auth.AccessTokenRequest;
+import com.medium.api.auth.AuthorizationCodeRequestBuilder;
+import com.medium.api.auth.Credentials;
+import com.medium.api.auth.Scope;
+
+import com.medium.api.dependencies.HttpClient;
+import com.medium.api.dependencies.UnirestClient;
+
 import com.medium.api.model.Contributor;
 import com.medium.api.model.Image;
 import com.medium.api.model.Post;
@@ -22,6 +31,7 @@ import com.medium.api.model.Publication;
 import com.medium.api.model.Submission;
 import com.medium.api.model.User;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,9 +40,79 @@ import java.util.List;
 public class MediumClient implements Medium {
 
     /**
-     * Constructs a new MediumClient.
+     * The credentials this client will use when talking to a Medium
+     * OAuth2 endpoint, before obtaining an access token.
      */
-    public MediumClient() {
+    private final Credentials credentials;
+
+    /**
+     * The access token that will be used to sign all requests made to
+     * Medium APIs.
+     */
+    private String accessToken;
+
+    /**
+     * The URL to the Medium API.
+     */
+    private String endpoint;
+
+    /**
+     * The HTTP client that will be used to talk to the endpoint.
+     */
+    private HttpClient httpClient;
+
+    /**
+     * Constructs a new Medium Client with client credentials.
+     */
+    public MediumClient(final Credentials credentials) {
+        this.endpoint = Endpoint.API_BASE;
+        this.credentials = credentials;
+        this.httpClient = new UnirestClient();
+    }
+
+    /**
+     * Constructs a new Medium Client from an existing access token.
+     *
+     * @param accessToken an access token obtained from Medium's OAuth2
+     *                    token API
+     */
+    public MediumClient(final String accessToken) {
+        this((Credentials)null);
+        this.accessToken = accessToken;
+    }
+
+    @Override
+    public String getAuthorizationUrl(final String state,
+            final String redirectUrl, final Collection<Scope> scopes) {
+
+        return new AuthorizationCodeRequestBuilder()
+            .withEndpoint(Endpoint.AUTHORIZE_BASE)
+            .withClientId(credentials.getClientId())
+            .withScopes(scopes)
+            .withState(state)
+            .withRedirectUri(redirectUrl)
+            .asUri();
+    }
+
+    @Override
+    public AccessToken exchangeAuthorizationCode(
+            final String code, final String redirectUri) {
+
+        return httpClient.post(
+            Endpoint.API_BASE + "/tokens",
+            new AccessTokenRequest.Builder()
+                .withClientId(credentials.getClientId())
+                .withClientSecret(credentials.getClientSecret())
+                .withCode(code)
+                .withRedirectUri(redirectUri)
+                .build(),
+            AccessToken.class
+        );
+    }
+
+    @Override
+    public AccessToken exchangeRefreshToken(final String token) {
+        return null;
     }
 
     @Override

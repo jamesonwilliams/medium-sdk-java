@@ -16,10 +16,14 @@
 package com.medium.api;
 
 import com.medium.api.auth.AuthorizationHandler;
+import com.medium.api.auth.Scope;
+
 import com.medium.api.config.ConfigFile;
 import com.medium.api.config.ConfigFileReader;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Demonstrates the SDK.
@@ -42,10 +46,19 @@ public class DemoApp {
     public static void main(final String[] args) throws IOException {
         ConfigFile config = new ConfigFileReader(CONFIG_FILE_PATH).read();
 
-        AuthorizationHandler handler =
-            new AuthorizationHandler(config.getCredentials(), config.getRedirectUri());
+        Medium medium = new MediumClient(config.getCredentials());
 
-        openUrlInBrowser(handler.getAuthorizationUrl());
+        AuthorizationHandler handler = new AuthorizationHandler(
+            medium, config.getRedirectUri()
+        );
+
+        Collection<Scope> scopes = Arrays.asList(
+            Scope.BASIC_PROFILE
+        );
+
+        openUrlInBrowser(medium.getAuthorizationUrl(
+            "state", config.getRedirectUri(), scopes
+        ));
 
         handler.run();
     }

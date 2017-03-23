@@ -15,6 +15,9 @@
  */
 package com.medium.api.auth;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * The scopes for an authorized user's API requests.
  */
@@ -48,10 +51,12 @@ public enum Scope {
      *
      * @param a string representation of a scope
      */
+    @JsonCreator
     private Scope(final String scopeString) {
         this.scopeString = scopeString;
     }
 
+    @JsonValue
     @Override
     public String toString() {
         return scopeString;

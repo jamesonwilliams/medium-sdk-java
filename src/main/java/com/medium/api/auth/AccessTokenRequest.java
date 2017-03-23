@@ -13,7 +13,7 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package com.medium.api.model;
+package com.medium.api.auth;
 
 /**
  * An AccessTokenRequest is made to the tokens endpoint after having
@@ -21,6 +21,11 @@ package com.medium.api.model;
  * server having posted to the callback URI.
  */
 public class AccessTokenRequest {
+
+    /**
+     * Currently grantType is always this value.
+     */
+    public static final String DEFAULT_GRANT_TYPE = "authorization_code";
 
     /**
      * The short term authorization code obtained via browser
@@ -120,6 +125,13 @@ public class AccessTokenRequest {
         private String clientSecret;
         private String grantType;
         private String redirectUri;
+
+        /**
+         * Constructs a new instance of Builder.
+         */
+        public Builder() {
+            this.grantType = DEFAULT_GRANT_TYPE;
+        }
 
         /**
          * Sets the authorization code.

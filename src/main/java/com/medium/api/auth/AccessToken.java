@@ -15,15 +15,18 @@
  */
 package com.medium.api.auth;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collection;
 
 /**
- * An AccessTokenGrantedResponse is one of the possible outcomes after an
- * {@link AccessTokenRequest} is placed. The access token in the resul
- * may be used to exercise the enpoint's main (not-security-dominated)
- * APIs.
+ * An AccessToken may be returned as one of the possible outcomes after
+ * an {@link AccessTokenRequest} is placed. The access token in the
+ * resul may be used to exercise the enpoint's main
+ * (not-security-dominated) APIs.
  */
-public class AccessTokenGrantedResponse {
+public class AccessToken {
 
     /**
      * The token type. Should contain the literal string "Bearer".
@@ -53,7 +56,7 @@ public class AccessTokenGrantedResponse {
     private final long expiresAt;
 
     /**
-     * Constructs a new instance of AccessTokenGrantedResponse.
+     * Constructs a new instance of AccessToken.
      *
      * @param tokenType the type of token granted
      * @param accessToken the access token that was granted
@@ -61,18 +64,64 @@ public class AccessTokenGrantedResponse {
      * @param scope the scopes of access that were granted
      * @param expiresAt the time when the token will expire
      */
-    public AccessTokenGrantedResponse(
-            final String tokenType,
-            final String accessToken,
-            final String refreshToken,
-            final Collection<Scope> scope,
-            final long expiresAt) {
+    @JsonCreator
+    public AccessToken(
+            @JsonProperty("token_type") final String tokenType,
+            @JsonProperty("access_token") final String accessToken,
+            @JsonProperty("refresh_token") final String refreshToken,
+            @JsonProperty("scope") final Collection<Scope> scope,
+            @JsonProperty("expires_at") final long expiresAt) {
 
         this.tokenType = tokenType;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.scope = scope;
         this.expiresAt = expiresAt;
+    }
+
+    /**
+     * Gets the token type.
+     *
+     * @return the token type
+     */
+    public String getTokenType() {
+        return tokenType;
+    }
+
+    /**
+     * Gets the access token.
+     *
+     * @return the access token
+     */
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    /**
+     * Gets the refresh token.
+     *
+     * @return the refresh token
+     */
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    /**
+     * Gets the scope.
+     *
+     * @return the access scope
+     */
+    public Collection<Scope> getScope() {
+        return scope;
+    }
+
+    /**
+     * Gets the expiration time of the token.
+     *
+     * @return the expiration time of the token in UNIX time
+     */
+    public long getExpiresAt() {
+        return expiresAt;
     }
 }
 

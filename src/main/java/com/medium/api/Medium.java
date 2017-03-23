@@ -15,6 +15,9 @@
  */
 package com.medium.api;
 
+import com.medium.api.auth.AccessToken;
+import com.medium.api.auth.Scope;
+
 import com.medium.api.model.Contributor;
 import com.medium.api.model.Image;
 import com.medium.api.model.Post;
@@ -22,12 +25,52 @@ import com.medium.api.model.Publication;
 import com.medium.api.model.Submission;
 import com.medium.api.model.User;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Described the interface to the Medium endpoint.
  */
 public interface Medium {
+
+    /**
+     * Returns the URL to which an application may send a user in order
+     * to acquire authorization.
+     *
+     * @param state a request forgery token of your choosing
+     * @param redirectUrl the URL where we will send the user after they
+     *                    have completed the login dialog
+     * @param scopes the scopes of access being requested
+     *
+     * @return the authorization URL to be consumed by the end user.
+     */
+    String getAuthorizationUrl(final String state,
+            final String redirectUrl, final Collection<Scope> scopes);
+
+    /**
+     * Exchanges the supplied code for a long-lived access token.
+     *
+     * @param code the authorization code obtained from an OAuth2
+     *             callback
+     * @param redirectUri the uri at which the code was received
+     *
+     * @return a valid OAuth2 access token to use in subsequnce
+     *         API requests
+     */
+    AccessToken exchangeAuthorizationCode(
+            final String code, final String redirectUri);
+
+    /**
+     * Exchanges the supplied refresh token for a new access token.
+     *
+     * @param token a valid refresh token obtained from a prior
+     *              token request
+     *
+     * @return a valid OAuth2 access token to use in subsequent API
+     *         request
+     */
+    AccessToken exchangeRefreshToken(final String token);
+
     /**
      * Gets details about the user.
      *

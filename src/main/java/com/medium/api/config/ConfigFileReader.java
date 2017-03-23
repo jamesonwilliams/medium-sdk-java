@@ -13,6 +13,7 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package com.medium.api.config;
 
 import com.medium.api.auth.Credentials;

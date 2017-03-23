@@ -13,6 +13,7 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package com.medium.api;
 
 import com.medium.api.auth.AccessToken;
@@ -66,8 +67,8 @@ public class MediumClient implements Medium {
      */
     public MediumClient(final Credentials credentials) {
         this.endpoint = Endpoint.API_BASE;
-        this.credentials = credentials;
         this.httpClient = new UnirestClient();
+        this.credentials = credentials;
     }
 
     /**
@@ -77,8 +78,10 @@ public class MediumClient implements Medium {
      *                    token API
      */
     public MediumClient(final String accessToken) {
-        this((Credentials)null);
+        this.endpoint = Endpoint.API_BASE;
+        this.httpClient = new UnirestClient(accessToken);
         this.accessToken = accessToken;
+        this.credentials = null;
     }
 
     @Override
@@ -112,12 +115,12 @@ public class MediumClient implements Medium {
 
     @Override
     public AccessToken exchangeRefreshToken(final String token) {
-        return null;
+        throw new RuntimeException("Not implement yet.");
     }
 
     @Override
     public User getUser() {
-        return null;
+        return httpClient.get(Endpoint.API_BASE + "/me", User.class);
     }
 
     @Override

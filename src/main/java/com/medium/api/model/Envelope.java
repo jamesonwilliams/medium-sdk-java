@@ -16,45 +16,36 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
- * The types of images that can be uploaded.
+ * API responses are wrapped in a data envelope.
  */
-public enum ImageType {
-    /**
-     * JPEG image.
-     */
-    JPEG("image/jpeg"),
+public class Envelope {
 
     /**
-     * PNG image.
+     * The name of the envelope is "data".
      */
-    PNG("image/png"),
+    private final Object data;
 
     /**
-     * Animated gifs are supported. Use your power for good.
+     * Constructs a new Envelope.
      */
-    GIF("image/gif"),
-
-    /**
-     * TIFF image.
-     */
-    TIFF("image/tiff");
-
-    private final String imageTypeString;
-
-    /**
-     * Gets the enumerated image type from a string representation of
-     * the same.
-     *
-     * @param imageTypeString an image type represented as a string
-     */
-    private ImageType(final String imageTypeString) {
-        this.imageTypeString = imageTypeString;
+    @JsonCreator
+    public Envelope(@JsonProperty("data") final Object data) {
+        this.data = data;
     }
 
-    @Override
-    public String toString() {
-        return imageTypeString;
+    /**
+     * Gets the data inside the envelope as a given type.
+     *
+     * @param <T> the type of data inside the envelope
+     * @param dataType the type of data inside the envelope
+     *
+     * @return the data in the envelope
+     */
+    public <T> T getData(Class<T> dataType) {
+        return (T) data;
     }
 }
-

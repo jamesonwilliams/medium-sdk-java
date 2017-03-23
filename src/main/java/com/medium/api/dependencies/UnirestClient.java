@@ -13,11 +13,13 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package com.medium.api.dependencies;
 
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -27,20 +29,15 @@ import java.io.IOException;
 public class UnirestClient extends Unirest implements HttpClient {
 
     /**
-     * Constructs a new UnirestClient.
+     * The name of the JSON field which acts as a data envelope.
      */
-    public UnirestClient() {
-        super();
+    private static final String ENVELOPE_FIELD_NAME = "data";
 
-        // Set headers common to every Connect API reques
-        setDefaultHeader("Authorization", "");
-        setDefaultHeader("Content-Type", "application/json");
-        setDefaultHeader("Accept", "application/json");
-    
-        setObjectMapper(new com.mashape.unirest.http.ObjectMapper() {
+    private static final com.mashape.unirest.http.ObjectMapper MAPPER =
+        new com.mashape.unirest.http.ObjectMapper() {
             private com.fasterxml.jackson.databind.ObjectMapper jacksonObjectMapper =
                 new com.fasterxml.jackson.databind.ObjectMapper();
-    
+
             public <T> T readValue(String value, Class<T> valueType) {
                 try {
                     return jacksonObjectMapper.readValue(value, valueType);
@@ -48,7 +45,7 @@ public class UnirestClient extends Unirest implements HttpClient {
                     throw new RuntimeException(e);
                 }
             }
-    
+
             public String writeValue(Object value) {
                 try {
                     return jacksonObjectMapper.writeValueAsString(value);
@@ -56,15 +53,36 @@ public class UnirestClient extends Unirest implements HttpClient {
                     throw new RuntimeException(e);
                 }
             }
-        });
+        };
+
+    public UnirestClient(final String bearerToken) {
+        this();
+        setDefaultHeader("Authorization", "Bearer " + bearerToken);
+    }
+
+    /**
+     * Constructs a new UnirestClient.
+     */
+    public UnirestClient() {
+        super();
+
+        // Set headers common to every Connect API reques
+        setDefaultHeader("Content-Type", "application/json");
+        setDefaultHeader("Accept", "application/json");
+
+        setObjectMapper(MAPPER);
     }
 
     @Override
     public <Q, A> A post(String url, Q item, Class<A> responseType) {
         try {
-            return post(url).body(item).asObject(responseType).getBody();
+            return MAPPER.readValue(
+                maybeUnwrap(
+                    post(url).body(item).asJson().getBody().getObject()
+                ).toString(),
+                responseType
+            );
         } catch (final UnirestException unirestException) {
-            System.out.println(unirestException);
             return null;
         }
     }
@@ -72,11 +90,35 @@ public class UnirestClient extends Unirest implements HttpClient {
     @Override
     public <A> A get(String url, Class<A> responseType) {
         try {
-            return get(url).asObject(responseType).getBody();
+            return MAPPER.readValue(
+                maybeUnwrap(
+                    get(url).asJson().getBody().getObject()
+                ).toString(),
+                responseType
+            );
         } catch (final UnirestException unirestException) {
-            System.out.println(unirestException);
             return null;
         }
+    }
+
+    /**
+     * Surely there is a more elegant way to go about this, but this is
+     * our method to unwrap an enveloped response.
+     *
+     * @param data JSON that may or may not be wrapped in an envelope.
+     *
+     * @return if data was in an envelope, the contents of the envelope;
+     *         otherwise, just return data.
+     */
+    private JSONObject maybeUnwrap(final JSONObject data) {
+        final JSONObject dataInsideEnvelope =
+            data.getJSONObject(ENVELOPE_FIELD_NAME);
+
+        if (null != dataInsideEnvelope) {
+            return dataInsideEnvelope;
+        }
+
+        return data;
     }
 }
 

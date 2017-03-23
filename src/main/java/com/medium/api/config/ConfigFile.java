@@ -13,6 +13,7 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package com.medium.api.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -40,6 +41,11 @@ public class ConfigFile {
     private final String redirectUri;
 
     /**
+     * The access token, if one exists (null otherwise).
+     */
+    private String accessToken;
+
+    /**
      * Constructs a new representation of a ConfigFile.
      *
      * @param credentials the credentials represented in the file
@@ -49,10 +55,12 @@ public class ConfigFile {
     @JsonCreator
     public ConfigFile(
             @JsonProperty("credentials") final Credentials credentials,
-            @JsonProperty("redirectUri") final String redirectUri) {
+            @JsonProperty("redirectUri") final String redirectUri,
+            @JsonProperty("accessToken") final String accessToken) {
 
         this.credentials = credentials;
         this.redirectUri = redirectUri;
+        this.accessToken = accessToken;
     }
 
     /**
@@ -71,6 +79,15 @@ public class ConfigFile {
      */
     public String getRedirectUri() {
         return redirectUri;
+    }
+
+    /**
+     * Gets the access token if one is present, otherwise returns null.
+     *
+     * @return the access token
+     */
+    public String getAccessToken() {
+        return accessToken;
     }
 }
 

@@ -13,6 +13,7 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package com.medium.api;
 
 import com.medium.api.auth.AccessToken;
@@ -29,7 +30,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Described the interface to the Medium endpoint.
+ * Describes the interface to the Medium endpoint.
  */
 public interface Medium {
 

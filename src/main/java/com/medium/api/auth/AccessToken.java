@@ -13,6 +13,7 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 package com.medium.api.auth;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -66,11 +67,11 @@ public class AccessToken {
      */
     @JsonCreator
     public AccessToken(
-            @JsonProperty("token_type") final String tokenType,
-            @JsonProperty("access_token") final String accessToken,
+            @JsonProperty("token_type")    final String tokenType,
+            @JsonProperty("access_token")  final String accessToken,
             @JsonProperty("refresh_token") final String refreshToken,
-            @JsonProperty("scope") final Collection<Scope> scope,
-            @JsonProperty("expires_at") final long expiresAt) {
+            @JsonProperty("scope")         final Collection<Scope> scope,
+            @JsonProperty("expires_at")    final long expiresAt) {
 
         this.tokenType = tokenType;
         this.accessToken = accessToken;

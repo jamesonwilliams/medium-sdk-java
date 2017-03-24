@@ -6,12 +6,10 @@ A Java Client for the Medium.com API
 This is actively under development and should not yet be considered
 stable. Gating issues are:
 
- - There are no tests. Seriously? Ya. ```¯\_(ツ)_/¯``` (#YOLO?)
+ - Abysmal test coverage. ```¯\_(ツ)_/¯``` (#YOLO?)
  - Story around eror handling and logging needs improvement
  - Needs a bit of work to be usable on Android
  - Token refresh and upload image are not implemented.
- - `MediumClient.Builder` should exist, to allow customizations of SDK
-   features without rebuilding the project.
 
 ## Demo
 
@@ -156,6 +154,41 @@ Note: there are ways to avoid all of the Jackson annotations, such as:
 Since it would be a little bold at this point to take on Java 8 as a
 dependency, and since immutability is worth the cost of a little extra
 syntactic fluff, the current decision seems to be the best.
+
+## Doing Custom Stuff
+
+If you don't want to use this stuff for whatever reason, you can
+customize stuff via the `MediumClient.Builder`:
+
+    Medium medium = new MediumClient.Builder()
+        .withHttpClient(new HttpClient() {
+            @Override
+            public String get(final String url) {
+                // Logic to GET an URL
+            }
+
+            @Override
+            public String post(final String url, final String body) {
+                // Logic to POST to an URL
+            }
+
+            @Override
+            public void setBearerToken(final String accessToken) {
+                // Set your client to use an access token
+            }
+        })
+        .withConverter(new JsonModelConverter() {
+            // Convert POJOs...
+            @Override
+            public String asJson(final Object object) {
+                // I convert POJOs, bruh. Just what I'm into.
+            }
+            ...
+        })
+        .withEndpoint("https://api-testing.medium.com/v1")
+        .withAccessToken(config.getAccessToken())
+        .withCredentials(config.getCredentials())
+        .build();
 
 [unirest]: https://github.com/Mashape/unirest-java
 [jackson]: https://github.com/FasterXML/jackson

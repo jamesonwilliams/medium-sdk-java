@@ -30,6 +30,31 @@ import java.util.Collection;
 public class AccessToken {
 
     /**
+     * The JSON key for the token type.
+     */
+    private static final String TOKEN_TYPE_KEY = "token_type";
+
+    /**
+     * The JSON key for the access token field.
+     */
+    private static final String ACCESS_TOKEN_KEY = "access_token";
+
+    /**
+     * The JSON key for the refresh token field.
+     */
+    private static final String REFRESH_TOKEN_KEY = "refresh_token";
+
+    /**
+     * The JSON key for the scope filed.
+     */
+    private static final String SCOPE_KEY = "scope";
+
+    /**
+     * The JSON key name for the expires at field.
+     */
+    private static final String EXPIRES_AT_KEY = "expires_at";
+
+    /**
      * The token type. Should contain the literal string "Bearer".
      */
     private final String tokenType;
@@ -67,11 +92,11 @@ public class AccessToken {
      */
     @JsonCreator
     public AccessToken(
-            @JsonProperty("token_type")    final String tokenType,
-            @JsonProperty("access_token")  final String accessToken,
-            @JsonProperty("refresh_token") final String refreshToken,
-            @JsonProperty("scope")         final Collection<Scope> scope,
-            @JsonProperty("expires_at")    final long expiresAt) {
+            @JsonProperty(TOKEN_TYPE_KEY)   final String tokenType,
+            @JsonProperty(ACCESS_TOKEN_KEY) final String accessToken,
+            @JsonProperty(REFRESH_TOKEN_KEY)final String refreshToken,
+            @JsonProperty(SCOPE_KEY)        final Collection<Scope> scope,
+            @JsonProperty(EXPIRES_AT_KEY)   final long expiresAt) {
 
         this.tokenType = tokenType;
         this.accessToken = accessToken;
@@ -85,6 +110,7 @@ public class AccessToken {
      *
      * @return the token type
      */
+    @JsonProperty(TOKEN_TYPE_KEY)
     public String getTokenType() {
         return tokenType;
     }
@@ -94,6 +120,7 @@ public class AccessToken {
      *
      * @return the access token
      */
+    @JsonProperty(ACCESS_TOKEN_KEY)
     public String getAccessToken() {
         return accessToken;
     }
@@ -103,6 +130,7 @@ public class AccessToken {
      *
      * @return the refresh token
      */
+    @JsonProperty(REFRESH_TOKEN_KEY)
     public String getRefreshToken() {
         return refreshToken;
     }
@@ -112,6 +140,7 @@ public class AccessToken {
      *
      * @return the access scope
      */
+    @JsonProperty(SCOPE_KEY)
     public Collection<Scope> getScope() {
         return scope;
     }
@@ -121,6 +150,7 @@ public class AccessToken {
      *
      * @return the expiration time of the token in UNIX time
      */
+    @JsonProperty(EXPIRES_AT_KEY)
     public long getExpiresAt() {
         return expiresAt;
     }

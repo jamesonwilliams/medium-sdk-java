@@ -37,23 +37,48 @@ public class UnirestHttpClient implements HttpClient {
     private final Unirest unirest;
 
     /**
-     * Constructs a new UnirestHttpClient from a Bearer token.
-     *
-     * @param param bearerToken an authorization credential
+     * Constructs a new UnirestHtptClient.
      */
-    public UnirestHttpClient(final String bearerToken) {
-        this();
-        unirest.setDefaultHeader("Authorization", "Bearer " + bearerToken);
+    public UnirestHttpClient() {
+        this(null);
     }
 
     /**
-     * Constructs a new UnirestHttpClient.
+     * Constructs a new UnirestHttpClient from a Bearer token.
+     *
+     * @param bearerToken an authentiation token that will be added to
+     *                    the header of all HTTP requests.
      */
-    public UnirestHttpClient() {
-        unirest = new Unirest();
+    public UnirestHttpClient(final String bearerToken) {
+        this(null, bearerToken);
+    }
+
+    /**
+     * Constructs a new UnirestHttpClient from a Bearer token.
+     *
+     * @param unirest a specific unirest implementation to use
+     * @param bearerToken an authentiation token that will be added to
+     *                    the header of all HTTP requests.
+     */
+    public UnirestHttpClient(final Unirest unirest, final String bearerToken) {
+        if (null == unirest) {
+            this.unirest = new Unirest();
+        } else {
+            this.unirest = unirest;
+        }
+
         // Set headers common to every Connect API reques
         unirest.setDefaultHeader("Content-Type", "application/json");
         unirest.setDefaultHeader("Accept", "application/json");
+
+        if (null != bearerToken) {
+            setBearerToken(bearerToken);
+        }
+    }
+
+    @Override
+    public void setBearerToken(final String bearerToken) {
+        unirest.setDefaultHeader("Authorization", "Bearer " + bearerToken);
     }
 
     @Override

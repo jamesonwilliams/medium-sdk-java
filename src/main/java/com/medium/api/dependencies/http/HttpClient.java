@@ -54,5 +54,13 @@ public interface HttpClient {
      *         If the response code is not 200.
      */
     String get(String url) throws HttpException;
+
+    /**
+     * Sets the bearer token to be inserted into the header of all
+     * outgoing HTTP requests.
+     *
+     * @param bearerToken the bearer access token
+     */
+    void setBearerToken(final String bearerToken);
 }
 

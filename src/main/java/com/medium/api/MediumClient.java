@@ -49,48 +49,54 @@ public class MediumClient implements Medium {
     private final Credentials credentials;
 
     /**
-     * The access token that will be used to sign all requests made to
-     * Medium APIs.
-     */
-    private String accessToken;
-
-    /**
      * The URL to the Medium API.
      */
-    private String endpoint;
+    private final String endpoint;
 
     /**
      * The HTTP client that will be used to talk to the endpoint.
      */
-    private HttpClient httpClient;
+    private final HttpClient httpClient;
 
     /**
      * Serializes and deserializes objects from the data model.
      */
-    private JsonModelConverter converter;
+    private final JsonModelConverter converter;
 
     /**
-     * Constructs a new Medium Client with client credentials.
+     * Construct a new instance of MediumClient via Credentials.
+     *
+     * @param credentials the credentails to use
      */
     public MediumClient(final Credentials credentials) {
         this.endpoint = Endpoint.API_BASE;
         this.httpClient = new UnirestHttpClient();
-        this.credentials = credentials;
         this.converter = new JacksonModelConverter();
+        this.credentials = credentials;
     }
 
     /**
-     * Constructs a new Medium Client from an existing access token.
+     * Constructs a new instance of MediumClient with an access token.
      *
-     * @param accessToken an access token obtained from Medium's OAuth2
-     *                    token API
+     * @param accessToken the access token to use
      */
     public MediumClient(final String accessToken) {
-        this.endpoint = Endpoint.API_BASE;
-        this.httpClient = new UnirestHttpClient(accessToken);
-        this.accessToken = accessToken;
-        this.credentials = null;
-        this.converter = new JacksonModelConverter();
+        this((Credentials)null);
+        this.httpClient.setBearerToken(accessToken);
+    }
+
+    /**
+     * Constructs a new Medium Client with the options that were set in
+     * the builder.
+     *
+     * @param builder the builder from which parameter values will
+     *                obtained
+     */
+    private MediumClient(final Builder builder) {
+        this.credentials = builder.credentials;
+        this.endpoint = builder.endpoint;
+        this.httpClient = builder.httpClient;
+        this.converter = builder.converter;
     }
 
     @Override
@@ -111,7 +117,7 @@ public class MediumClient implements Medium {
             final String code, final String redirectUri) {
 
         return converter.asAccessToken(httpClient.post(
-            Endpoint.API_BASE + "/tokens",
+            endpoint + "/tokens",
             converter.asJson(new AccessTokenRequest.Builder()
                 .withClientId(credentials.getClientId())
                 .withClientSecret(credentials.getClientSecret())
@@ -129,17 +135,13 @@ public class MediumClient implements Medium {
 
     @Override
     public User getUser() {
-        return converter.asUser(
-            httpClient.get(Endpoint.API_BASE + "/me")
-        );
+        return converter.asUser(httpClient.get(endpoint + "/me"));
     }
 
     @Override
     public List<Publication> listPublications(final String userId) {
         return converter.asPublicationList(httpClient.get(
-            String.format("%s/users/%s/publications",
-                Endpoint.API_BASE, userId
-            )
+            String.format("%s/users/%s/publications", endpoint, userId)
         ));
     }
 
@@ -147,7 +149,7 @@ public class MediumClient implements Medium {
     public List<Contributor> listContributors(final String publicationId) {
         return converter.asContributorList(httpClient.get(
             String.format("%s/publications/%s/contributors",
-                Endpoint.API_BASE, publicationId
+                endpoint, publicationId
             )
         ));
     }
@@ -157,7 +159,7 @@ public class MediumClient implements Medium {
             final Submission submission, final String userId) {
 
         return converter.asPost(httpClient.post(
-            String.format("%s/users/%s/posts", Endpoint.API_BASE, userId),
+            String.format("%s/users/%s/posts", endpoint, userId),
             converter.asJson(submission)
         ));
     }
@@ -168,7 +170,7 @@ public class MediumClient implements Medium {
 
         return converter.asPost(httpClient.post(
             String.format("%s/publications/%s/posts",
-                Endpoint.API_BASE, publicationId
+                endpoint, publicationId
             ),
             converter.asJson(submission)
         ));
@@ -177,6 +179,103 @@ public class MediumClient implements Medium {
     @Override
     public Image uploadImage() {
         throw new RuntimeException("Not implement yet.");
+    }
+
+    /**
+     * Builder fascilitates the creation of a MediumClient.
+     */
+    public static class Builder {
+
+        private Credentials credentials;
+        private String accessToken;
+        private String endpoint;
+        private HttpClient httpClient;
+        private JsonModelConverter converter;
+
+        /**
+         * Constructs a new instance of Builder with default values
+         * where possible.
+         */
+        public Builder() {
+            this.converter = new JacksonModelConverter();
+            this.endpoint = Endpoint.API_BASE;
+            this.httpClient = new UnirestHttpClient(accessToken);
+        }
+
+        /**
+         * Sets the credentials to use.
+         *
+         * @param credentials the credentials to use
+         *
+         * @return the updated instance of the builder
+         */
+        public Builder withCredentials(final Credentials credentials) {
+            this.credentials = credentials;
+            return this;
+        }
+
+        /**
+         * Sets the JSON to Model Converter to use for serialization and
+         * deserialization of objects.
+         *
+         * @param converter the JSON to Model converter
+         *
+         * @return the updated instance of the builder
+         */
+        public Builder withConverter(final JsonModelConverter converter) {
+            this.converter = converter;
+            return this;
+        }
+
+        /**
+         * Sets the API endpoint to use, eg. https://api.medium.com/v1
+         *
+         * @param endpoint the base url of the API endpoint to use
+         *
+         * @return the updated instance of the builder
+         */
+        public Builder withEndpoint(final String endpoint) {
+            this.endpoint = endpoint;
+            return this;
+        }
+
+        /**
+         * Sets the access token to use.
+         *
+         * @param accessToken the access token to use
+         *
+         * @return the updated instance of the builder
+         */
+        public Builder withAccessToken(final String accessToken) {
+            this.accessToken = accessToken;
+            return this;
+        }
+
+        /**
+         * Sets the HTTP client implementation to use.
+         *
+         * @param httpClient the HTTP client implementation to use
+         *
+         * @return the updated instance of the builder
+         */
+        public Builder withHttpClient(final HttpClient httpClient) {
+            this.httpClient = httpClient;
+            return this;
+        }
+
+        /**
+         * Contructs a new instance of a MediumClient using the options
+         * that were provided to this Builder instance.
+         *
+         * @return a new instance of MediumClient.
+         */
+        public MediumClient build() {
+            if (null != this.accessToken) {
+                this.httpClient.setBearerToken(this.accessToken);
+            }
+
+            return new MediumClient(this);
+        }
     }
 }
 

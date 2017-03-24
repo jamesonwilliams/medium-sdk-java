@@ -89,10 +89,7 @@ public class JacksonModelConverter implements JsonModelConverter {
 
     @Override
     public List<Publication> asPublicationList(final String json) {
-        final JavaType type = TypeFactory.defaultInstance()
-            .constructCollectionType(List.class, Publication.class);
-
-        return readValueOrError(json, type);
+        return readValueOrError(json, listOf(Publication.class));
     }
 
     @Override
@@ -107,10 +104,7 @@ public class JacksonModelConverter implements JsonModelConverter {
 
     @Override
     public List<Contributor> asContributorList(final String json) {
-        final JavaType type = TypeFactory.defaultInstance()
-            .constructCollectionType(List.class, Contributor.class);
-
-        return readValueOrError(json, type);
+        return readValueOrError(json, listOf(Contributor.class));
     }
 
     @Override
@@ -202,6 +196,19 @@ public class JacksonModelConverter implements JsonModelConverter {
         }
 
         return node;
+    }
+
+    /**
+     * Gets the JavaType which is a list of items which are of a given
+     * type.
+     *
+     * @param memberClass the class of the members of the list
+     *
+     * @return the list of items type as a JavaType
+     */
+    private JavaType listOf(final Class<?> memberClass) {
+        return TypeFactory.defaultInstance()
+            .constructCollectionType(List.class, memberClass);
     }
 }
 

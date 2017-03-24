@@ -144,8 +144,12 @@ public class MediumClient implements Medium {
     }
 
     @Override
-    public List<Contributor> listPublicationContributors() {
-        return null;
+    public List<Contributor> listContributors(final String publicationId) {
+        return converter.asContributorList(httpClient.get(
+            String.format("%s/publications/%s/contributors",
+                Endpoint.API_BASE, publicationId
+            )
+        ));
     }
 
     @Override
@@ -160,12 +164,12 @@ public class MediumClient implements Medium {
 
     @Override
     public Post publishPost(Submission submission, Publication publication) {
-        return null;
+        throw new RuntimeException("Not implement yet.");
     }
 
     @Override
     public Image uploadImage() {
-        return null;
+        throw new RuntimeException("Not implement yet.");
     }
 }
 

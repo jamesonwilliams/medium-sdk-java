@@ -100,9 +100,12 @@ public interface Medium {
      * publication, as well as a description of their exact role in the
      * publication (for now, either an editor or a writer).
      *
+     * @param publicationId the publication for which to list
+     *                      contributors
+     *
      * @return the full list of a publication's contributors
      */
-    List<Contributor> listPublicationContributors();
+    List<Contributor> listContributors(final String publicationId);
 
     /**
      * Creates a post under the authenticated user’s profile.

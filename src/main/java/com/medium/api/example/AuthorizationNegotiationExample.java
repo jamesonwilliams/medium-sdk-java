@@ -26,12 +26,14 @@ import com.medium.api.auth.Scope;
 import com.medium.api.config.ConfigFile;
 import com.medium.api.config.ConfigFileReader;
 
+import com.medium.api.model.Contributor;
 import com.medium.api.model.Publication;
 import com.medium.api.model.User;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -82,7 +84,9 @@ public class AuthorizationNegotiationExample {
         listenForAccessToken(new AccessProvider.Observer() {
             @Override
             public void onAccessGranted(final AccessToken token) {
-                System.out.println("Sweet, we got a token: " + token.getAccessToken());
+                System.out.println(
+                    "Sweet, we got a token: " + token.getAccessToken()
+                );
                 useApiWithToken(token);
             }
 
@@ -104,18 +108,29 @@ public class AuthorizationNegotiationExample {
     private static void useApiWithToken(final AccessToken token) {
         final Medium medium = new MediumClient(token.getAccessToken());
 
-        System.out.println("Does this even get called?");
-
         User user = medium.getUser();
+        System.out.println("Hello, " + user);
 
-        if (null != user) {
-            System.out.println("We got a user: " + user);
-        } else {
-            System.out.println("Failed to get the user.");
-        }
+        final List<Publication> publications =
+            medium.listPublications(user.getId());
 
-        for (Publication item : medium.listPublications(user.getId())) {
-            System.out.println(item.getName() + ": " + item.getDescription());
+        // List all of the publications and who contributes to them.
+        for (Publication publication : publications) {
+            System.out.println(String.format("%s: %s",
+                publication.getName(),
+                publication.getDescription()
+            ));
+
+            System.out.println("Contributors: ");
+
+            List<Contributor> contributors =
+                medium.listContributors(publication.getId());
+
+            for (Contributor contributor : contributors) {
+                System.out.println(String.format("%s: %s",
+                    contributor.getUserId(), contributor.getRole()
+                ));
+            }
         }
     }
 

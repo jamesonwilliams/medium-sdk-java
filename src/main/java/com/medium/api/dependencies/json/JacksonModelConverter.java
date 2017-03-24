@@ -21,16 +21,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
-import com.medium.api.auth.AccessToken;
-import com.medium.api.config.ConfigFile;
-import com.medium.api.model.Contributor;
-import com.medium.api.model.Error;
-import com.medium.api.model.Image;
-import com.medium.api.model.Post;
-import com.medium.api.model.Publication;
-import com.medium.api.model.Submission;
-import com.medium.api.model.User;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -68,48 +58,13 @@ public class JacksonModelConverter implements JsonModelConverter {
     }
 
     @Override
-    public AccessToken asAccessToken(final String json) {
-        return readValueOrError(json, AccessToken.class);
+    public <T> T asSingle(Class<T> asType, final String json) {
+        return readValueOrError(json, asType);
     }
 
     @Override
-    public User asUser(final String json) {
-        return readValueOrError(json, User.class);
-    }
-
-    @Override
-    public Error asError(final String json) {
-        return readValueOrError(json, Error.class);
-    }
-
-    @Override
-    public Post asPost(final String json) {
-        return readValueOrError(json, Post.class);
-    }
-
-    @Override
-    public List<Publication> asPublicationList(final String json) {
-        return readValueOrError(json, listOf(Publication.class));
-    }
-
-    @Override
-    public Submission asSubmission(final String json) {
-        return readValueOrError(json, Submission.class);
-    }
-
-    @Override
-    public Image asImage(final String json) {
-        return readValueOrError(json, Image.class);
-    }
-
-    @Override
-    public List<Contributor> asContributorList(final String json) {
-        return readValueOrError(json, listOf(Contributor.class));
-    }
-
-    @Override
-    public ConfigFile asConfigFile(final String json) {
-        return readValueOrError(json, ConfigFile.class);
+    public <T> List<T> asListOf(Class<T> itemType, final String json) {
+        return readValueOrError(json, listOf(itemType));
     }
 
     @Override

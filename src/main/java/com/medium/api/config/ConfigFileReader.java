@@ -96,7 +96,10 @@ public class ConfigFileReader implements CredentialsProvider {
      *         If the file on disk cannot be read
      */
     public ConfigFile read() throws IOException {
-        return converter.asConfigFile(FileReader.read(configFilePath));
+        return converter.asSingle(
+            ConfigFile.class,
+            FileReader.read(configFilePath)
+        );
     };
 }
 

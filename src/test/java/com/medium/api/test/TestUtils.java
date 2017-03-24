@@ -25,6 +25,11 @@ import java.util.Scanner;
 public final class TestUtils {
 
     /**
+     * The envelope name (key in JSON).
+     */
+    private static final String ENVELOPE_KEY = "data";
+
+    /**
      * Gets the contents of the test resource as a string.
      *
      * Note: this is probably pretty "Maven"-y.
@@ -47,5 +52,16 @@ public final class TestUtils {
             scanner.hasNext() ? scanner.next() : "";
 
         return contents;
+    }
+
+    /**
+     * Wraps the JSON string in a data envelope.
+     *
+     * @param json the JSON to wrap in an envelope.
+     *
+     * @return the JSON string, but wrapped in an envelope
+     */
+    public static String wrapInEnvelope(final String json) {
+        return "{\"" + ENVELOPE_KEY + "\": " + json + "}";
     }
 }

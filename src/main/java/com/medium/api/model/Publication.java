@@ -205,6 +205,16 @@ public class Publication {
             this.imageUrl = imageUrl;
             return this;
         }
+
+        /**
+         * Creates a new Publication from the options set in the
+         * builder.
+         *
+         * @return a new instance of Publication
+         */
+        public Publication build() {
+            return new Publication(this);
+        }
     }
 }
 

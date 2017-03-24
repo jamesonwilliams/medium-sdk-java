@@ -116,7 +116,7 @@ public class MediumClient implements Medium {
     public AccessToken exchangeAuthorizationCode(
             final String code, final String redirectUri) {
 
-        return converter.asAccessToken(httpClient.post(
+        return converter.asSingle(AccessToken.class, httpClient.post(
             endpoint + "/tokens",
             converter.asJson(new AccessTokenRequest.Builder()
                 .withClientId(credentials.getClientId())
@@ -135,19 +135,21 @@ public class MediumClient implements Medium {
 
     @Override
     public User getUser() {
-        return converter.asUser(httpClient.get(endpoint + "/me"));
+        return converter.asSingle(User.class, httpClient.get(
+            endpoint + "/me"
+        ));
     }
 
     @Override
     public List<Publication> listPublications(final String userId) {
-        return converter.asPublicationList(httpClient.get(
+        return converter.asListOf(Publication.class, httpClient.get(
             String.format("%s/users/%s/publications", endpoint, userId)
         ));
     }
 
     @Override
     public List<Contributor> listContributors(final String publicationId) {
-        return converter.asContributorList(httpClient.get(
+        return converter.asListOf(Contributor.class, httpClient.get(
             String.format("%s/publications/%s/contributors",
                 endpoint, publicationId
             )
@@ -158,7 +160,7 @@ public class MediumClient implements Medium {
     public Post createPost(
             final Submission submission, final String userId) {
 
-        return converter.asPost(httpClient.post(
+        return converter.asSingle(Post.class, httpClient.post(
             String.format("%s/users/%s/posts", endpoint, userId),
             converter.asJson(submission)
         ));
@@ -168,7 +170,7 @@ public class MediumClient implements Medium {
     public Post createPostForPublication(
             final Submission submission, final String publicationId) {
 
-        return converter.asPost(httpClient.post(
+        return converter.asSingle(Post.class, httpClient.post(
             String.format("%s/publications/%s/posts",
                 endpoint, publicationId
             ),

@@ -16,16 +16,6 @@
 
 package com.medium.api.dependencies.json;
 
-import com.medium.api.auth.AccessToken;
-import com.medium.api.config.ConfigFile;
-import com.medium.api.model.Contributor;
-import com.medium.api.model.Error;
-import com.medium.api.model.Image;
-import com.medium.api.model.Post;
-import com.medium.api.model.Publication;
-import com.medium.api.model.Submission;
-import com.medium.api.model.User;
-
 import java.util.List;
 
 /**
@@ -49,83 +39,27 @@ public interface JsonModelConverter {
     String asJson(final Object object);
 
     /**
-     * Deserializes the specified JSON as an {@link AccessToken}.
+     * Deserializes JSON as a single item of a given type.
      *
+     * @param <T> the type of returned item
+     * @param asType the class of the item returned
      * @param json the JSON to deserialize
      *
-     * @return an AccessToken
+     * @return an object of the requested class, deserialized from the
+     *         provided json string
      */
-    AccessToken asAccessToken(final String json);
+    <T> T asSingle(final Class<T> asType, final String json);
 
     /**
-     * Deserializes the specified JSON as an {@link User}.
+     * Deserializes JSON as a list of objects of a given type.
      *
-     * @param json the JSON to deserialize.
-     *
-     * @return a User
-     */
-    User asUser(final String json);
-
-    /**
-     * Deserializes the specified JSON as an {@link Error}.
-     *
-     * @param json the JSON to deserialize.
-     *
-     * @return an Error
-     */
-    Error asError(final String json);
-
-    /**
-     * Deserializes the specified json as a {@link Post}.
-     *
-     * @param json the JSON to deserialize.
-     *
-     * @return a Post
-     */
-    Post asPost(final String json);
-
-    /**
-     * Deserializes the specified json as a list of {@link Publication}.
-     *
+     * @param <T> the type of the items in the result list
+     * @param asType the class of the items in the list
      * @param json the JSON to deserialize
      *
-     * @return a Publication list
+     * @return a list of objects of the requested class, deserialized
+     *         from the provided JSON string.
      */
-    List<Publication> asPublicationList(final String json);
-
-    /**
-     * Deserialized the specified json a {@link Submission}.
-     *
-     * @param json the JSON to deserialize
-     *
-     * @return a Submission
-     */
-    Submission asSubmission(final String json);
-
-    /**
-     * Deserializes the specified JSON as an {@link Image}.
-     *
-     * @param json the JSON to deserialize
-     *
-     * @return an Image
-     */
-    Image asImage(final String json);
-
-    /**
-     * Deserializes the specified JSON as a {@link ConfigFile}.
-     *
-     * @param json the JSON to deserialize
-     *
-     * @return a ConfigFile
-     */
-    ConfigFile asConfigFile(final String json);
-
-    /**
-     * Deserializes the specified JSON as a list of {@link Contributor}.
-     *
-     * @param json the JSON to deserialize
-     *
-     * @return a Contributor list
-     */
-    List<Contributor> asContributorList(final String json);
+    <T> List<T> asListOf(final Class<T> asType, final String json);
 }
+

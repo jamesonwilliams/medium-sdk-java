@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jamesonwilliams/medium-sdk-java.svg?branch=master)](https://travis-ci.org/jamesonwilliams/medium-sdk-java)
+
 # medium-sdk-java
 A Java Client for the Medium.com API
 

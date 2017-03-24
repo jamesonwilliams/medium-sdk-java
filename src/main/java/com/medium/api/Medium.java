@@ -65,13 +65,13 @@ public interface Medium {
     /**
      * Exchanges the supplied refresh token for a new access token.
      *
-     * @param token a valid refresh token obtained from a prior
-     *              token request
+     * @param refreshToken
+     *        a valid refresh token obtained from a prior token request
      *
      * @return a valid OAuth2 access token to use in subsequent API
      *         request
      */
-    AccessToken exchangeRefreshToken(final String token);
+    AccessToken exchangeRefreshToken(final String refreshToken);
 
     /**
      * Gets details about the user.

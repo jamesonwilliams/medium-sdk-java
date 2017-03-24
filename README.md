@@ -9,7 +9,7 @@ stable. Gating issues are:
  - Inadequate test coverage. ```¯\_(ツ)_/¯``` (#YOLO?)
  - Story around eror handling and logging needs improvement
  - Needs a bit of work to be usable on Android
- - Token refresh and upload image are not implemented.
+ - Image upload is not implemented.
 
 ## Demo
 

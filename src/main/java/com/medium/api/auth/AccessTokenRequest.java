@@ -21,7 +21,7 @@ package com.medium.api.auth;
  * obtained a short-lived authorization code by means of the OAuth
  * server having posted to the callback URI.
  */
-public class AccessTokenRequest {
+public class AccessTokenRequest extends TokenRequest {
 
     /**
      * Currently grantType is always this value.
@@ -33,21 +33,6 @@ public class AccessTokenRequest {
      * authorization.
      */
     private final String code;
-
-    /**
-     * Client access key.
-     */
-    private final String clientId;
-
-    /**
-     * Client access secret.
-     */
-    private final String clientSecret;
-
-    /**
-     * The grant type.
-     */
-    private final String grantType;
 
     /**
      * The URL where we the user was sent after they completed the login
@@ -62,10 +47,8 @@ public class AccessTokenRequest {
      *                be obtained.
      */
     private AccessTokenRequest(final Builder builder) {
+        super(builder);
         this.code = builder.code;
-        this.clientId = builder.clientId;
-        this.clientSecret = builder.clientSecret;
-        this.grantType = builder.grantType;
         this.redirectUri = builder.redirectUri;
     }
 
@@ -76,33 +59,6 @@ public class AccessTokenRequest {
      */
     public String getCode() {
         return code;
-    }
-
-    /**
-     * Gets the client aceess key.
-     *
-     * @return the client id
-     */
-    public String getClientId() {
-        return clientId;
-    }
-
-    /**
-     * Gets the client access secret.
-     *
-     * @return the client secre
-     */
-    public String getClientSecret() {
-        return clientSecret;
-    }
-
-    /**
-     * Gets the grant type.
-     *
-     * @return the grant type
-     */
-    public String getGrantType() {
-        return grantType;
     }
 
     /**
@@ -119,19 +75,16 @@ public class AccessTokenRequest {
      * Builder fascilitates the construction of an
      * AccessTokenRequest.
      */
-    public static class Builder {
+    public static class Builder extends TokenRequest.Builder<Builder> {
 
         private String code;
-        private String clientId;
-        private String clientSecret;
-        private String grantType;
         private String redirectUri;
 
         /**
          * Constructs a new instance of Builder.
          */
         public Builder() {
-            this.grantType = DEFAULT_GRANT_TYPE;
+            super(DEFAULT_GRANT_TYPE);
         }
 
         /**
@@ -143,42 +96,6 @@ public class AccessTokenRequest {
          */
         public Builder withCode(final String code) {
             this.code = code;
-            return this;
-        }
-
-        /**
-         * Sets the client access key/id.
-         *
-         * @param clientId the client id
-         *
-         * @return the updated instance of the current builder
-         */
-        public Builder withClientId(final String clientId) {
-            this.clientId = clientId;
-            return this;
-        }
-
-        /**
-         * Sets the client secret key/id.
-         *
-         * @param clientSecret the client secre
-         *
-         * @return the updated instance of the current builder
-         */
-        public Builder withClientSecret(final String clientSecret) {
-            this.clientSecret = clientSecret;
-            return this;
-        }
-
-        /**
-         * Sets the grant type.
-         *
-         * @param grantType the grant type to se
-         *
-         * @return the updated instance of the current builder
-         */
-        public Builder withGrantType(final String grantType) {
-            this.grantType = grantType;
             return this;
         }
 
@@ -202,6 +119,7 @@ public class AccessTokenRequest {
          * @return a new instance of AccessTokenRequest, with any
          *         requested attributes configured.
          */
+        @Override
         public AccessTokenRequest build() {
             return new AccessTokenRequest(this);
         }

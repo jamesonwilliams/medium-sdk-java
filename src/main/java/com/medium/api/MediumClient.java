@@ -20,6 +20,7 @@ import com.medium.api.auth.AccessToken;
 import com.medium.api.auth.AccessTokenRequest;
 import com.medium.api.auth.AuthorizationCodeRequestBuilder;
 import com.medium.api.auth.Credentials;
+import com.medium.api.auth.RefreshTokenRequest;
 import com.medium.api.auth.Scope;
 
 import com.medium.api.dependencies.http.HttpClient;
@@ -129,8 +130,17 @@ public class MediumClient implements Medium {
     }
 
     @Override
-    public AccessToken exchangeRefreshToken(final String token) {
-        throw new RuntimeException("Not implement yet.");
+    public AccessToken exchangeRefreshToken(final String refreshToken) {
+
+        return converter.asSingle(AccessToken.class, httpClient.post(
+            endpoint + "/tokens",
+            converter.asJson(new RefreshTokenRequest.Builder()
+                .withClientId(credentials.getClientId())
+                .withClientSecret(credentials.getClientSecret())
+                .withRefreshToken(refreshToken)
+                .build()
+            )
+        ));
     }
 
     @Override

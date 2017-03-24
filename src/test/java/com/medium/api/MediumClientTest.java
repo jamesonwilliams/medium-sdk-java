@@ -27,6 +27,7 @@ import com.medium.api.auth.AccessToken;
 import com.medium.api.auth.AccessTokenRequest;
 import com.medium.api.auth.AuthorizationCodeRequestBuilder;
 import com.medium.api.auth.Credentials;
+import com.medium.api.auth.RefreshTokenRequest;
 import com.medium.api.auth.Scope;
 
 import com.medium.api.dependencies.http.HttpClient;
@@ -118,11 +119,40 @@ public class MediumClientTest {
         return builder.toString();
     }
 
-    /**
-     * TODO: implement me.
-     */
     @Ignore
     public void testExchangeAuthoriazationCode() {
+
+        // Arrange
+        final String exchangeUrl = TEST_ENDPOINT + "/tokens";
+        final String mockJson = TestUtils.getResourceContents("access-token.json");
+        when(http.get(eq(exchangeUrl))).thenReturn(mockJson);
+
+        // Act
+        AccessToken token = medium.exchangeAuthorizationCode("", "");
+
+        // Assert
+        assertEquals(
+            "e27bb85c111d0f4fb27597db25fd4d359ff066ba10d6779ec2aa01bfa60a0a958",
+            token.getAccessToken()
+        );
+    }
+
+    @Ignore
+    public void testExchangeRefreshToken() {
+
+        // Arrange
+        final String exchangeUrl = TEST_ENDPOINT + "/tokens";
+        final String mockJson = TestUtils.getResourceContents("access-token.json");
+        when(http.get(eq(exchangeUrl))).thenReturn(mockJson);
+
+        // Act
+        AccessToken token = medium.exchangeRefreshToken("");
+
+        // Assert
+        assertEquals(
+            "e27bb85c111d0f4fb27597db25fd4d359ff066ba10d6779ec2aa01bfa60a0a958",
+            token.getAccessToken()
+        );
     }
 
     @Test

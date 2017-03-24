@@ -6,7 +6,7 @@ A Java Client for the Medium.com API
 This is actively under development and should not yet be considered
 stable. Gating issues are:
 
- - Abysmal test coverage. ```¯\_(ツ)_/¯``` (#YOLO?)
+ - Inadequate test coverage. ```¯\_(ツ)_/¯``` (#YOLO?)
  - Story around eror handling and logging needs improvement
  - Needs a bit of work to be usable on Android
  - Token refresh and upload image are not implemented.

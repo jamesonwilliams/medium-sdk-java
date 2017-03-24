@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * A contributor is any Medium user other than the authenticated user
  * who makes contributions to a publication associated with the
@@ -42,8 +45,11 @@ public class Contributor {
     /**
      * Constructs a new contributor.
      */
-    public Contributor(final String publicationId,
-            final String userId, final Role role) {
+    @JsonCreator
+    public Contributor(
+            @JsonProperty("publicationId") final String publicationId,
+            @JsonProperty("userId")        final String userId,
+            @JsonProperty("role")          final Role role) {
 
         this.publicationId = publicationId;
         this.userId = userId;

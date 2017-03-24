@@ -16,31 +16,14 @@
 
 package com.medium.api.util;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.Scanner;
 
 /**
  * FileReader is a simple utility to read the contents of a file.
  */
 public final class FileReader {
-
-    /**
-     * Reads and returns the contents of the file at the given path.
-     *
-     * @param path the path to the file to be read
-     * @param encoding the encoding of the file
-     *
-     * @return the contents of the file as a string
-     * @throws IOException
-     *         If the file cannot be read
-     */
-    public static String read(final String path, final Charset encoding)
-            throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded, encoding);
-    }
 
     /**
      * Reads the contents of the file at the given path, using the
@@ -53,7 +36,7 @@ public final class FileReader {
      *         If the file cannot be read
      */
     public static String read(final String path) throws IOException {
-        return new String(Files.readAllBytes(Paths.get(path)));
+        return new Scanner(new File(path)).useDelimiter("\\Z").next();
     }
 }
 

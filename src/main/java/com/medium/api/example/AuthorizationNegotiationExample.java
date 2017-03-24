@@ -26,6 +26,7 @@ import com.medium.api.auth.Scope;
 import com.medium.api.config.ConfigFile;
 import com.medium.api.config.ConfigFileReader;
 
+import com.medium.api.model.Publication;
 import com.medium.api.model.User;
 
 import java.io.IOException;
@@ -111,6 +112,10 @@ public class AuthorizationNegotiationExample {
             System.out.println("We got a user: " + user);
         } else {
             System.out.println("Failed to get the user.");
+        }
+
+        for (Publication item : medium.listPublications(user.getId())) {
+            System.out.println(item.getName() + ": " + item.getDescription());
         }
     }
 

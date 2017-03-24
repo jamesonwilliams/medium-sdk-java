@@ -16,8 +16,10 @@
 
 package com.medium.api.dependencies.json;
 
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import com.medium.api.auth.AccessToken;
 import com.medium.api.config.ConfigFile;
@@ -30,6 +32,7 @@ import com.medium.api.model.Submission;
 import com.medium.api.model.User;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * JacksonModelConverter is a Jackson-library implementation of a
@@ -85,8 +88,11 @@ public class JacksonModelConverter implements JsonModelConverter {
     }
 
     @Override
-    public Publication asPublication(final String json) {
-        return readValueOrError(json, Publication.class);
+    public List<Publication> asPublicationList(final String json) {
+        final JavaType type = TypeFactory.defaultInstance()
+            .constructCollectionType(List.class, Publication.class);
+
+        return readValueOrError(json, type);
     }
 
     @Override
@@ -100,8 +106,11 @@ public class JacksonModelConverter implements JsonModelConverter {
     }
 
     @Override
-    public Contributor asContributor(final String json) {
-        return readValueOrError(json, Contributor.class);
+    public List<Contributor> asContributorList(final String json) {
+        final JavaType type = TypeFactory.defaultInstance()
+            .constructCollectionType(List.class, Contributor.class);
+
+        return readValueOrError(json, type);
     }
 
     @Override
@@ -130,7 +139,7 @@ public class JacksonModelConverter implements JsonModelConverter {
     }
 
     /**
-     * Deserializes a JSON string into an object of a named type.
+     * Deserializes a JSON string into an object of a given class.
      *
      * @param <T> the type of object to deserialize into
      * @param json the json to deserialize
@@ -142,6 +151,26 @@ public class JacksonModelConverter implements JsonModelConverter {
         try {
             JsonNode node = maybeOpenEnvelope(json);
             return (T) jackson.treeToValue(node, asClass);
+        } catch (final IOException mapperException) {
+            throw new ConverterException(mapperException.getMessage());
+        }
+    }
+
+    /**
+     * Deserializes a JSON string into an object of a named type.
+     *
+     * @param <T> the type of object to deserialize into
+     * @param json the json to deserialize
+     * @param type the the type of the output object.
+     *
+     * @return the object representation of the JSON string
+     */
+    private <T> T readValueOrError(final String json, JavaType type) {
+        try {
+            JsonNode node = maybeOpenEnvelope(json);
+            return (T) jackson.readValue(
+                jackson.treeAsTokens(node), type
+            );
         } catch (final IOException mapperException) {
             throw new ConverterException(mapperException.getMessage());
         }

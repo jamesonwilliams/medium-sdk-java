@@ -26,6 +26,8 @@ import com.medium.api.model.Publication;
 import com.medium.api.model.Submission;
 import com.medium.api.model.User;
 
+import java.util.List;
+
 /**
  * A Json Model Converter must be capable of serializing and
  * deserializing all of the types in the model.
@@ -83,13 +85,13 @@ public interface JsonModelConverter {
     Post asPost(final String json);
 
     /**
-     * Deserializes the specified json as a {@link Publication}.
+     * Deserializes the specified json as a list of {@link Publication}.
      *
      * @param json the JSON to deserialize
      *
-     * @return a Publication
+     * @return a Publication list
      */
-    Publication asPublication(final String json);
+    List<Publication> asPublicationList(final String json);
 
     /**
      * Deserialized the specified json a {@link Submission}.
@@ -119,11 +121,11 @@ public interface JsonModelConverter {
     ConfigFile asConfigFile(final String json);
 
     /**
-     * Deserializes the specified JSON as a {@link Contributor}.
+     * Deserializes the specified JSON as a list of {@link Contributor}.
      *
      * @param json the JSON to deserialize
      *
-     * @return a Contributor
+     * @return a Contributor list
      */
-    Contributor asContributor(final String json);
+    List<Contributor> asContributorList(final String json);
 }

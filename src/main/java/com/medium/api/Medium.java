@@ -45,8 +45,9 @@ public interface Medium {
      *
      * @return the authorization URL to be consumed by the end user.
      */
-    String getAuthorizationUrl(final String state,
-            final String redirectUrl, final Collection<Scope> scopes);
+    String getAuthorizationUrl(
+            final String state, final String redirectUrl,
+            final Collection<Scope> scopes);
 
     /**
      * Exchanges the supplied code for a long-lived access token.
@@ -108,24 +109,28 @@ public interface Medium {
     List<Contributor> listContributors(final String publicationId);
 
     /**
-     * Creates a post under the authenticated user’s profile.
+     * Creates a post as content associated with a user account.
      *
      * @param submission the publication request
+     * @param userId the id of the user for whom the post will be
+     *               published
      *
      * @return the newly published post
      */
-    Post publishPost(Submission submission);
+    Post createPost(
+            final Submission submission, final String userId);
 
     /**
-     * Publishes a post under a given publication.
+     * Creates a post as content associated with a publication.
      *
      * @param submission the post being submitted for publication
-     * @param publication the publication to which the post should be
-     *                    published
+     * @param publicationId the id of the publication to which the post
+     *                      should be published
      *
      * @return the newly published post
      */
-    Post publishPost(Submission submission, Publication publication);
+    Post createPostForPublication(
+            final Submission submission, final String publicationId);
 
     /**
      * Uploads an image to Medium.

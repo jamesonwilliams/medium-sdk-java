@@ -6,15 +6,12 @@ A Java Client for the Medium.com API
 This is actively under development and should not yet be considered
 stable. Gating issues are:
 
- - There are no tests. Seriously? Ya. ```¯\_(ツ)_/¯```
- - To be considered *stable*, you'd have to (at least) be able to use the
-   distributed binary form of this software without modifcation.
-   At present, you'd have to check out the code and tinker.
- - No good story around error handling or logging
- - Some development kruft left lingering in the `dependencies` package
- - Not all APIs are implemented.
- - Needs a bit of work to be usable on Android (in 2017, why else would
-   you write a Java client SDK, really, I ask?)
+ - There are no tests. Seriously? Ya. ```¯\_(ツ)_/¯``` (#YOLO?)
+ - Story around eror handling and logging needs improvement
+ - Needs a bit of work to be usable on Android
+ - Token refresh and upload image are not implemented.
+ - `MediumClient.Builder` should exist, to allow customizations of SDK
+   features without rebuilding the project.
 
 ## Demo
 
@@ -69,7 +66,6 @@ To publish a post:
 
     // Submit a post for publication.
     Submission submission = new Submission.Builder()
-        .withUserId(user.getId())
         .withTitle("A Great Day for a Java SDK!")
         .withContentFormat(ContentFormat.MARKDOWN)
         .withContent("```Medium medium = new MediumClient(TOKEN);```")
@@ -79,7 +75,7 @@ To publish a post:
         .withNotifyFollowers(false) // Just a test!
         .build();
 
-    Post post = medium.publishPost(submission);
+    Post post = medium.createPost(submission, user.getId());
 
     System.out.println(String.format(
         "Published \"%s\" to \"%s\" at %s\n",
@@ -143,21 +139,25 @@ The listen method is implemented as:
 ### Unirest 1.4.9+
 
 The project uses the [Unirest HTTP library][unirest]. If you want to use
-something else, you can use your own implementation of the `HttpClient`
-interface. The one currently used is `UnirestClient`.
+something else, you can use your own implementation of the generic
+`HttpClient` interface. The one currently used is `UnirestClient`.
 
 ### Jackson 2+
 
-The project is at this point pretty heavily tied into
-[Jackson][jackson], as the above dependency used Jackson and also most
-of the immutable POJOs have been annotated with Jackson annotations.
-Those things considered, you try to use some other serializer (Gson?) by
-using your own implementation of the `JsonConverter` interface.
+You could use another serializer by implementing the
+`JsonModelConverter` interface. However, the model POJOs are currently
+wearing Jackson annotations.
 
-Note: there are ways to avoid all of the Jackson annotations, such as by
-using reflection features of Java8, or by not using immutable objects.
-Neither seemed worth it, so we just went with the annotations.
+Note: there are ways to avoid all of the Jackson annotations, such as:
+
+ - using reflection features of Java8
+ - not using immutable objects.
+
+Since it would be a little bold at this point to take on Java 8 as a
+dependency, and since immutability is worth the cost of a little extra
+syntactic fluff, the current decision seems to be the best.
 
 [unirest]: https://github.com/Mashape/unirest-java
 [jackson]: https://github.com/FasterXML/jackson
 [settings]: https://medium.com/me/settings
+

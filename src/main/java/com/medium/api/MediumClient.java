@@ -153,18 +153,25 @@ public class MediumClient implements Medium {
     }
 
     @Override
-    public Post publishPost(Submission submission) {
+    public Post createPost(
+            final Submission submission, final String userId) {
+
         return converter.asPost(httpClient.post(
-            String.format("%s/users/%s/posts",
-                Endpoint.API_BASE, submission.getUserId()
-            ),
+            String.format("%s/users/%s/posts", Endpoint.API_BASE, userId),
             converter.asJson(submission)
         ));
     }
 
     @Override
-    public Post publishPost(Submission submission, Publication publication) {
-        throw new RuntimeException("Not implement yet.");
+    public Post createPostForPublication(
+            final Submission submission, final String publicationId) {
+
+        return converter.asPost(httpClient.post(
+            String.format("%s/publications/%s/posts",
+                Endpoint.API_BASE, publicationId
+            ),
+            converter.asJson(submission)
+        ));
     }
 
     @Override

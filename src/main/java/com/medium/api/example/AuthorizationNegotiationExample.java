@@ -81,7 +81,10 @@ public class AuthorizationNegotiationExample {
      *                     authorization url
      */
     public static void main(final String[] args) throws IOException {
+
         listenForAccessToken(new AccessProvider.Observer() {
+
+            // Called when Access Provider has obtained a token
             @Override
             public void onAccessGranted(final AccessToken token) {
                 System.out.println(
@@ -90,6 +93,7 @@ public class AuthorizationNegotiationExample {
                 useApiWithToken(token);
             }
 
+            // Called if Access Provider can't get a token for whatever reason
             @Override
             public void onAccessError() {
                 System.err.println("Oh no. What ever could be wrong?");
@@ -106,15 +110,19 @@ public class AuthorizationNegotiationExample {
      *              token as a string via token.getAccessToken().
      */
     private static void useApiWithToken(final AccessToken token) {
+
+        // Use the access token to create a Medium Client
         final Medium medium = new MediumClient(token.getAccessToken());
 
-        User user = medium.getUser();
+        // Get information about the user
+        final User user = medium.getUser();
         System.out.println("Hello, " + user);
 
+        // Get a list of publications associated with the user
         final List<Publication> publications =
             medium.listPublications(user.getId());
 
-        // List all of the publications and who contributes to them.
+        // For each, print details about it
         for (Publication publication : publications) {
             System.out.println(String.format("%s: %s",
                 publication.getName(),
@@ -123,9 +131,11 @@ public class AuthorizationNegotiationExample {
 
             System.out.println("Contributors: ");
 
-            List<Contributor> contributors =
+            // Get a list of the contributors to a publication
+            final List<Contributor> contributors =
                 medium.listContributors(publication.getId());
 
+            // Show those details
             for (Contributor contributor : contributors) {
                 System.out.println(String.format("%s: %s",
                     contributor.getUserId(), contributor.getRole()
@@ -147,22 +157,31 @@ public class AuthorizationNegotiationExample {
     private static void listenForAccessToken(final AccessProvider.Observer observer)
             throws IOException {
 
+        // Load SDK configuration from a file on disk
         ConfigFile config = new ConfigFileReader(CONFIG_FILE_PATH).read();
 
+        // Create an authentication client based on the API credentials
         Medium authClient = new MediumClient(config.getCredentials());
 
+        // Startup a local HTTP server to listen for GET requests on the
+        // callback URI. It will get the Authorization code.
         AccessProvider accessProvider = new LocalHttpAccessProvider(
             authClient,
             config.getRedirectUri(),
             observer
         );
 
+        // Create client state cookie
         final String clientState = UUID.randomUUID().toString();
 
+        // Redirect the user to go to the login page to grant access to
+        // our application
         openUrlInBrowser(authClient.getAuthorizationUrl(
             clientState, config.getRedirectUri(), REQUESTED_ACCESS_SCOPES
         ));
 
+        // Tell the access provider to expect an authorization code to
+        // show up.
         accessProvider.listenForAuthorizationCodes();
     }
 

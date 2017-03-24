@@ -58,9 +58,13 @@ public class SimpleTokenExample {
         User user = medium.getUser();
         System.out.println("Hello, " + user.getName());
 
-        // Submit a post for publication.
+        // List the publications associated with the user
+        for (Publication item : medium.listPublications(user.getId())) {
+            System.out.println(item.getName());
+        }
+
+        // Create a post submission object
         Submission submission = new Submission.Builder()
-            .withUserId(user.getId())
             .withTitle("A Great Day for a Java SDK!")
             .withContentFormat(ContentFormat.MARKDOWN)
             .withContent("```Medium medium = new MediumClient(TOKEN);```")
@@ -70,15 +74,13 @@ public class SimpleTokenExample {
             .withNotifyFollowers(false) // Just a test!
             .build();
 
-        Post post = medium.publishPost(submission);
+        // Use it to request creation of a post
+        Post post = medium.createPost(submission, user.getId());
 
+        // Get details about the post that was just created.
         System.out.println(String.format(
             "Published \"%s\" to \"%s\" at %s\n",
             post.getTitle(), post.getUrl(), post.getPublishedAt()
         ));
-
-        for (Publication item : medium.listPublications(user.getId())) {
-            System.out.println(item.getName());
-        }
     }
 }

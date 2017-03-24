@@ -28,11 +28,13 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-all</artifactId>
       <version>1.9.5</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.skyscreamer</groupId>
       <artifactId>jsonassert</artifactId>
       <version>1.5.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <properties>
@@ -58,8 +60,8 @@
         <version>2.17</version>
         <executions>
           <execution>
-            <id>validate</id>
-            <phase>validate</phase>
+            <id>verify-code-style</id>
+            <phase>verify</phase>
             <configuration>
               <configLocation>checkstyle.xml</configLocation>
               <encoding>${project.build.sourceEncoding}</encoding>
@@ -81,6 +83,23 @@
         <configuration>
           <mainClass>com.medium.api.example.SimpleTokenExample</mainClass>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.10.4</version>
+        <configuration>
+          <aggregate>true</aggregate>
+          <quiet>true</quiet>
+        </configuration>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

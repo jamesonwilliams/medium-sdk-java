@@ -31,6 +31,8 @@ public class Envelope {
 
     /**
      * Constructs a new Envelope.
+     *
+     * @param data the data inside of the envelope
      */
     @JsonCreator
     public Envelope(@JsonProperty("data") final Object data) {

@@ -26,6 +26,9 @@ public class CredentialsNotFoundException extends ProviderException {
 
     /**
      * Constructs a new instance of CredentialsNotFoundException.
+     *
+     * @param message a message explaining why credentials could not be
+     *                found, if the information is available
      */
     public CredentialsNotFoundException(final String message) {
         super(message);

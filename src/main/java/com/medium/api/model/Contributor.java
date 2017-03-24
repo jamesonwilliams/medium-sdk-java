@@ -44,6 +44,12 @@ public class Contributor {
 
     /**
      * Constructs a new contributor.
+     *
+     * @param publicationId the id of the publication to which a
+     *                      contribution was made
+     * @param userId the id of the user who makes contributions
+     * @param role the role of the contributor with respect to the
+     *             publication
      */
     @JsonCreator
     public Contributor(

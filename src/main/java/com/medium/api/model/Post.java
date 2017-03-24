@@ -94,7 +94,7 @@ public class Post {
      * @param canonicalUrl the URL to the content's original publication
      *                     location
      * @param publishStatus the post publish status
-     * @param publishAt the date of publication
+     * @param publishedAt the date of publication
      * @param license the license associated with the post
      * @param licenseUrl the url to the license
      */

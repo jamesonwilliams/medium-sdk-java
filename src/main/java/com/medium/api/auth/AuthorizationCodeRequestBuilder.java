@@ -65,8 +65,6 @@ public class AuthorizationCodeRequestBuilder {
     /**
      * Constructs an AuthorizationCodeRequest from the attributes
      * specified in the builder instance.
-     *
-     * @param builder the builder from which attributes will be plucked.
      */
     public AuthorizationCodeRequestBuilder() {
         this.responseType = DEFAULT_RESPONSE_TYPE;

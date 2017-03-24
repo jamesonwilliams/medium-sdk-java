@@ -57,7 +57,7 @@ public class Publication {
      * @param name the publication name
      * @param description the publication description
      * @param url the publication url
-     * @param url the url of the publication image/icon
+     * @param imageUrl the url of the publication image/icon
      */
     @JsonCreator
     public Publication(

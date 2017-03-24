@@ -53,6 +53,11 @@ public class User {
     /**
      * Constructs a new user.
      *
+     * @param id the id of the user
+     * @param username the username of the user
+     * @param name the person name of the user
+     * @param url url to the user's profile on Medium
+     * @param imageUrl url to the user's avatar
      */
     @JsonCreator
     public User(

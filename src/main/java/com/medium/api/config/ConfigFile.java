@@ -51,6 +51,8 @@ public class ConfigFile {
      * @param credentials the credentials represented in the file
      * @param redirectUri the callback uri accessed when a user
      *                    completes a login dialog.
+     * @param accessToken a valid access token if available (can be
+     *                    null)
      */
     @JsonCreator
     public ConfigFile(

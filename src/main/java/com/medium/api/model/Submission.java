@@ -16,6 +16,9 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collection;
 
 /**
@@ -24,6 +27,47 @@ import java.util.Collection;
  * post.
  */
 public class Submission {
+
+    /**
+     * The name of the JSON key for the title.
+     */
+    private static final String JSON_KEY_TITLE = "title";
+
+    /**
+     * The name of the JSON key for the content format.
+     */
+    private static final String JSON_KEY_CONTENT_FORMAT = "contentFormat";
+
+    /**
+     * The name of the JSON key for the content.
+     */
+    private static final String JSON_KEY_CONTENT = "content";
+
+    /**
+     * The name of the JSON key for the tags.
+     */
+    private static final String JSON_KEY_TAGS = "tags";
+
+    /**
+     * The name of the JSON key for url of the original publish
+     * location.
+     */
+    private static final String JSON_KEY_CANONICAL_URL = "canonicalUrl";
+
+    /**
+     * The name of the JSON key for the publish status.
+     */
+    private static final String JSON_KEY_PUBLISH_STATUS = "publishStatus";
+
+    /**
+     * The name of the JSON key for the license.
+     */
+    private static final String JSON_KEY_LICENSE = "license";
+
+    /**
+     * The name of the JSON key for the notify followers property.
+     */
+    private static final String JSON_KEY_NOTIFY_FOLLOWERS = "notifyFollowers";
 
     /**
      * The metadata title of the submission.
@@ -83,6 +127,39 @@ public class Submission {
         this.publishStatus = builder.publishStatus;
         this.license = builder.license;
         this.notifyFollowers = builder.notifyFollowers;
+    }
+
+    /**
+     * Constructs a new immutable instance of a submission.
+     *
+     * @param title the title of the submission
+     * @param contentFormat the format of the submission's content
+     * @param content the content of the sunmission
+     * @param tags tags to associated with the resulting post
+     * @param canonicalUrl the original publication location of content
+     * @param publishStatus the publish status of the submission
+     * @param license the license associated with the content
+     * @param notifyFollowers whether to notify followers on publish
+     */
+    @JsonCreator
+    private Submission(
+            @JsonProperty(JSON_KEY_TITLE)           final String title,
+            @JsonProperty(JSON_KEY_CONTENT_FORMAT)  final ContentFormat contentFormat,
+            @JsonProperty(JSON_KEY_CONTENT)         final String content,
+            @JsonProperty(JSON_KEY_TAGS)            final Collection<String> tags,
+            @JsonProperty(JSON_KEY_CANONICAL_URL)   final String canonicalUrl,
+            @JsonProperty(JSON_KEY_PUBLISH_STATUS)  final PublishStatus publishStatus,
+            @JsonProperty(JSON_KEY_LICENSE)         final License license,
+            @JsonProperty(JSON_KEY_NOTIFY_FOLLOWERS)final boolean notifyFollowers) {
+
+        this.title = title;
+        this.contentFormat = contentFormat;
+        this.content = content;
+        this.tags = tags;
+        this.canonicalUrl = canonicalUrl;
+        this.publishStatus = publishStatus;
+        this.license = license;
+        this.notifyFollowers = notifyFollowers;
     }
 
     /**

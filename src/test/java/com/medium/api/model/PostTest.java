@@ -26,7 +26,6 @@ import com.medium.api.test.TestUtils;
 import org.json.JSONException;
 
 import org.junit.Test;
-import org.junit.Before;
 
 import org.skyscreamer.jsonassert.JSONAssert;
 

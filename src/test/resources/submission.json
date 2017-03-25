@@ -1,0 +1,8 @@
+{
+  "title": "Hard things in software development",
+  "contentFormat": "html",
+  "content": "<p>Cache invalidation</p><p>Naming things</p>",
+  "tags": ["development", "design"],
+  "publishStatus": "draft"
+}
+

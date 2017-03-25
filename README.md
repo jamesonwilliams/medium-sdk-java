@@ -8,35 +8,39 @@ A Java Client for the Medium.com API
 This is actively under development and should not yet be considered
 stable. Gating issues are:
 
- - Inadequate test coverage. ```¯\_(ツ)_/¯``` (#YOLO?)
  - Story around eror handling and logging needs improvement
  - Needs a bit of work to be usable on Android
  - Image upload is not implemented.
+ - Low test coverage
 
 ## Demo
 
 ### config
 Create the file `./medium-config.json` in your project root:
 
-    {
-        "credentials": {
-            "clientId": "<YOUR_CLIENT_ID>",
-            "clientSecret": "<YOUR_CLIENT_SECRET>"
-        },
-        "redirectUri": "<CALLBACK_URL_YOU_TOLD_MEDIUM_ABOUT>"
-    }
+```json
+{
+    "credentials": {
+        "clientId": "<YOUR_CLIENT_ID>",
+        "clientSecret": "<YOUR_CLIENT_SECRET>"
+    },
+    "redirectUri": "<CALLBACK_URL_YOU_TOLD_MEDIUM_ABOUT>"
+}
+```
 
 Alternately, if you already have an authorization token (you can get one
 on [the Medium settings page][settings]), you can use:
 
-    {
-        "accessToken": "<YOUR_ACCESS_TOKEN>",
-        "credentials": {
-            "clientId": "<YOUR_CLIENT_ID>",
-            "clientSecret": "<YOUR_CLIENT_SECRET>"
-        },
-        "redirectUri": "<CALLBACK_URL_YOU_TOLD_MEDIUM_ABOUT>"
-    }
+```json
+{
+    "accessToken": "<YOUR_ACCESS_TOKEN>",
+    "credentials": {
+        "clientId": "<YOUR_CLIENT_ID>",
+        "clientSecret": "<YOUR_CLIENT_SECRET>"
+    },
+    "redirectUri": "<CALLBACK_URL_YOU_TOLD_MEDIUM_ABOUT>"
+}
+```
 
 ### build:
 
@@ -55,51 +59,57 @@ credentials.
 
 To get the details of your Medium user account, just do:
 
-    ConfigFile config = new ConfigFileReader("./medium-config.json").read();
+```java
+ConfigFile config = new ConfigFileReader("./medium-config.json").read();
 
-    Medium medium = new MediumClient(config.getAccessToken());
+Medium medium = new MediumClient(config.getAccessToken());
 
-    User user = medium.getUser();
-    System.out.println("Hello, " + user.getName());
+User user = medium.getUser();
+System.out.println("Hello, " + user.getName());
+```
 
 To publish a post:
 
-    // Submit a post for publication.
-    Submission submission = new Submission.Builder()
-        .withTitle("A Great Day for a Java SDK!")
-        .withContentFormat(ContentFormat.MARKDOWN)
-        .withContent("```Medium medium = new MediumClient(TOKEN);```")
-        .withTags(Arrays.asList("sdk"))
-        .withPublishStatus(PublishStatus.UNLISTED)
-        .withLicense(License.CC_40_BY)
-        .withNotifyFollowers(false) // Just a test!
-        .build();
+```
+// Submit a post for publication.
+Submission submission = new Submission.Builder()
+    .withTitle("A Great Day for a Java SDK!")
+    .withContentFormat(ContentFormat.MARKDOWN)
+    .withContent("```Medium medium = new MediumClient(TOKEN);```")
+    .withTags(Arrays.asList("sdk"))
+    .withPublishStatus(PublishStatus.UNLISTED)
+    .withLicense(License.CC_40_BY)
+    .withNotifyFollowers(false) // Just a test!
+    .build();
 
-    Post post = medium.createPost(submission, user.getId());
+Post post = medium.createPost(submission, user.getId());
 
-    System.out.println(String.format(
-        "Published \"%s\" to \"%s\" at %s\n",
-        post.getTitle(), post.getUrl(), post.getPublishedAt()
-    ));
+System.out.println(String.format(
+    "Published \"%s\" to \"%s\" at %s\n",
+    post.getTitle(), post.getUrl(), post.getPublishedAt()
+));
+```
 
 ### From Just Credentials
 
 The full example is provided in `AuthorizationNegotationExample`. The
 key points are:
 
-    // Register a callback to know when we are granted an access token
-    listenForAccessToken(new AccessProvider.Observer() {
-        @Override
-        public void onAccessGranted(final AccessToken token) {
-            System.out.println("Sweet, we got a token: " + token.getAccessToken());
-            useApiWithToken(token);
-        }
+```java
+// Register a callback to know when we are granted an access token
+listenForAccessToken(new AccessProvider.Observer() {
+    @Override
+    public void onAccessGranted(final AccessToken token) {
+        System.out.println("Sweet, we got a token: " + token.getAccessToken());
+        useApiWithToken(token);
+    }
 
-        @Override
-        public void onAccessError() {
-            System.err.println("Oh no. What ever could be wrong?");
-        }
-    });
+    @Override
+    public void onAccessError() {
+        System.err.println("Oh no. What ever could be wrong?");
+    }
+});
+```
 
 That method will start a local HTTP server to listen for requests at the
 callback URL. So, in order for this to work, you redirect URI would need
@@ -107,32 +117,34 @@ to be something local like `http://127.0.0.1:3333/callback`
 
 The listen method is implemented as:
 
-    private static void listenForAccessToken(final AccessProvider.Observer observer)
-            throws IOException {
+```java
+private static void listenForAccessToken(final AccessProvider.Observer observer)
+        throws IOException {
 
-        ConfigFile config = new ConfigFileReader(CONFIG_FILE_PATH).read();
+    ConfigFile config = new ConfigFileReader(CONFIG_FILE_PATH).read();
 
-        // Create a client that just handles authorization
-        Medium authClient = new MediumClient(config.getCredentials());
+    // Create a client that just handles authorization
+    Medium authClient = new MediumClient(config.getCredentials());
 
-        // Initialize the Local HTTP Access Provider
-        AccessProvider accessProvider = new LocalHttpAccessProvider(
-            authClient,
-            config.getRedirectUri(),
-            observer
-        );
+    // Initialize the Local HTTP Access Provider
+    AccessProvider accessProvider = new LocalHttpAccessProvider(
+        authClient,
+        config.getRedirectUri(),
+        observer
+    );
 
-        // Generate a state cookie
-        final String clientState = UUID.randomUUID().toString();
+    // Generate a state cookie
+    final String clientState = UUID.randomUUID().toString();
 
-        // Visit the authorization url in your browser
-        openUrlInBrowser(authClient.getAuthorizationUrl(
-            clientState, config.getRedirectUri(), REQUESTED_ACCESS_SCOPES
-        ));
+    // Visit the authorization url in your browser
+    openUrlInBrowser(authClient.getAuthorizationUrl(
+        clientState, config.getRedirectUri(), REQUESTED_ACCESS_SCOPES
+    ));
 
-        // Wait around for an authorization code to come in
-        accessProvider.listenForAuthorizationCodes();
-    }
+    // Wait around for an authorization code to come in
+    accessProvider.listenForAuthorizationCodes();
+}
+```
 
 ## Dependencies
 
@@ -162,35 +174,37 @@ syntactic fluff, the current decision seems to be the best.
 If you don't want to use this stuff for whatever reason, you can
 customize stuff via the `MediumClient.Builder`:
 
-    Medium medium = new MediumClient.Builder()
-        .withHttpClient(new HttpClient() {
-            @Override
-            public String get(final String url) {
-                // Logic to GET an URL
-            }
+```java
+Medium medium = new MediumClient.Builder()
+    .withHttpClient(new HttpClient() {
+        @Override
+        public String get(final String url) {
+            // Logic to GET an URL
+        }
 
-            @Override
-            public String post(final String url, final String body) {
-                // Logic to POST to an URL
-            }
+        @Override
+        public String post(final String url, final String body) {
+            // Logic to POST to an URL
+        }
 
-            @Override
-            public void setBearerToken(final String accessToken) {
-                // Set your client to use an access token
-            }
-        })
-        .withConverter(new JsonModelConverter() {
-            // Convert POJOs...
-            @Override
-            public String asJson(final Object object) {
-                // I convert POJOs, bruh. Just what I'm into.
-            }
-            ...
-        })
-        .withEndpoint("https://api-testing.medium.com/v1")
-        .withAccessToken(config.getAccessToken())
-        .withCredentials(config.getCredentials())
-        .build();
+        @Override
+        public void setBearerToken(final String accessToken) {
+            // Set your client to use an access token
+        }
+    })
+    .withConverter(new JsonModelConverter() {
+        // Convert POJOs...
+        @Override
+        public String asJson(final Object object) {
+            // I convert POJOs, bruh. Just what I'm into.
+        }
+        ...
+    })
+    .withEndpoint("https://api-testing.medium.com/v1")
+    .withAccessToken(config.getAccessToken())
+    .withCredentials(config.getCredentials())
+    .build();
+```
 
 [unirest]: https://github.com/Mashape/unirest-java
 [jackson]: https://github.com/FasterXML/jackson

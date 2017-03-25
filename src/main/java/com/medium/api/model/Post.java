@@ -33,6 +33,56 @@ import java.util.Date;
 public class Post {
 
     /**
+     * The JSON key name for the id.
+     */
+    private static final String JSON_KEY_ID = "id";
+
+    /**
+     * The JSON key name for the title.
+     */
+    private static final String JSON_KEY_TITLE = "title";
+
+    /**
+     * The JSON key name for the author id.
+     */
+    private static final String JSON_KEY_AUTHOR_ID = "authorId";
+
+    /**
+     * The JSON key name for the tags.
+     */
+    private static final String JSON_KEY_TAGS = "tags";
+
+    /**
+     * The JSON key name for the URL.
+     */
+    private static final String JSON_KEY_URL = "url";
+
+    /**
+     * The JSON key name for the canonical URL.
+     */
+    private static final String JSON_KEY_CANONICAL_URL = "canonicalUrl";
+
+    /**
+     * The JSON key name for the publish status.
+     */
+    private static final String JSON_KEY_PUBLISH_STATUS = "publishStatus";
+
+    /**
+     * The JSON key name for the published at time.
+     */
+    private static final String JSON_KEY_PUBLISHED_AT = "publishedAt";
+
+    /**
+     * The JSON key name for the license field.
+     */
+    private static final String JSON_KEY_LICENSE = "license";
+
+    /**
+     * The JSON key name for the license url.
+     */
+    private static final String JSON_KEY_LICENSE_URL = "licenseUrl";
+
+    /**
      * A unique identifier for the post.
      */
     private final String id;
@@ -100,16 +150,16 @@ public class Post {
      */
     @JsonCreator
     public Post(
-            @JsonProperty("id") final String id,
-            @JsonProperty("title") final String title,
-            @JsonProperty("authorId") final String authorId,
-            @JsonProperty("tags") final Collection<String> tags,
-            @JsonProperty("url") final String url,
-            @JsonProperty("canonicalUrl") final String canonicalUrl,
-            @JsonProperty("publishStatus") final PublishStatus publishStatus,
-            @JsonProperty("publishedAt") final Date publishedAt,
-            @JsonProperty("license") final License license,
-            @JsonProperty("licenseUrl") final String licenseUrl) {
+            @JsonProperty(JSON_KEY_ID)            final String id,
+            @JsonProperty(JSON_KEY_TITLE)         final String title,
+            @JsonProperty(JSON_KEY_AUTHOR_ID)     final String authorId,
+            @JsonProperty(JSON_KEY_TAGS)          final Collection<String> tags,
+            @JsonProperty(JSON_KEY_URL)           final String url,
+            @JsonProperty(JSON_KEY_CANONICAL_URL) final String canonicalUrl,
+            @JsonProperty(JSON_KEY_PUBLISH_STATUS)final PublishStatus publishStatus,
+            @JsonProperty(JSON_KEY_PUBLISHED_AT)  final Date publishedAt,
+            @JsonProperty(JSON_KEY_LICENSE)       final License license,
+            @JsonProperty(JSON_KEY_LICENSE_URL)   final String licenseUrl) {
         this.id = id;
         this.title = title;
         this.authorId = authorId;
@@ -146,6 +196,7 @@ public class Post {
      *
      * @return the post id
      */
+    @JsonProperty(JSON_KEY_ID)
     public String getId() {
         return id;
     }
@@ -155,6 +206,7 @@ public class Post {
      *
      * @return the title of the post
      */
+    @JsonProperty(JSON_KEY_TITLE)
     public String getTitle() {
         return title;
     }
@@ -164,6 +216,7 @@ public class Post {
      *
      * @return the author's user id
      */
+    @JsonProperty(JSON_KEY_AUTHOR_ID)
     public String getAuthorId() {
         return authorId;
     }
@@ -173,6 +226,7 @@ public class Post {
      *
      * @return the post's tags
      */
+    @JsonProperty(JSON_KEY_TAGS)
     public Collection<String> getTags() {
         return tags;
     }
@@ -182,6 +236,7 @@ public class Post {
      *
      * @return the URL of the post on Medium
      */
+    @JsonProperty(JSON_KEY_URL)
     public String getUrl() {
         return url;
     }
@@ -192,6 +247,7 @@ public class Post {
      *
      * @return the URL to the post content's original location
      */
+    @JsonProperty(JSON_KEY_CANONICAL_URL)
     public String getCanonicalUrl() {
         return canonicalUrl;
     }
@@ -201,6 +257,7 @@ public class Post {
      *
      * @return the publish status of the post
      */
+    @JsonProperty(JSON_KEY_PUBLISH_STATUS)
     public PublishStatus getPublishStatus() {
         return publishStatus;
     }
@@ -210,6 +267,7 @@ public class Post {
      *
      * @return the post's published date
      */
+    @JsonProperty(JSON_KEY_PUBLISHED_AT)
     public Date getPublishedAt() {
         return publishedAt;
     }
@@ -219,8 +277,19 @@ public class Post {
      *
      * @return the post's license
      */
+    @JsonProperty(JSON_KEY_LICENSE)
     public License getLicense() {
         return license;
+    }
+
+    /**
+     * Gets the URL to the license associated with the content.
+     *
+     * @return the URL to the license
+     */
+    @JsonProperty(JSON_KEY_LICENSE_URL)
+    public String getLicenseUrl() {
+        return licenseUrl;
     }
 
     /**

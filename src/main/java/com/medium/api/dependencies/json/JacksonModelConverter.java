@@ -114,6 +114,7 @@ public class JacksonModelConverter implements JsonModelConverter {
      *
      * @return the object representation of the JSON string
      */
+    @SuppressWarnings("unchecked")
     private <T> T readValueOrError(final String json, JavaType type) {
         try {
             JsonNode node = maybeOpenEnvelope(json);
@@ -143,10 +144,13 @@ public class JacksonModelConverter implements JsonModelConverter {
         try {
             node = jackson.readTree(json).get(ENVELOPE_FIELD_NAME);
         } catch (final IOException mapperException) {
-            // It wasn't in an envelope. Now we know.
+            // It's okay, maybe it wasn't in an enveloper.
+        } catch (final NullPointerException nullPointerException) {
+            // Ditto.
         }
         
         if (null == node) {
+            // We at exceptions above, but now we'll throw if need be
             node = jackson.readTree(json);
         }
 

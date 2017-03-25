@@ -96,6 +96,7 @@ public abstract class TokenRequest {
          *
          * @return the updated instance of the current builder
          */
+        @SuppressWarnings("unchecked")
         public T withClientId(final String clientId) {
             this.clientId = clientId;
             return (T) this;
@@ -108,6 +109,7 @@ public abstract class TokenRequest {
          *
          * @return the updated instance of the current builder
          */
+        @SuppressWarnings("unchecked")
         public T withClientSecret(final String clientSecret) {
             this.clientSecret = clientSecret;
             return (T) this;

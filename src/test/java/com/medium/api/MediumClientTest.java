@@ -44,7 +44,6 @@ import com.medium.api.util.StringUtils;
 import com.medium.api.test.TestUtils;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import org.mockito.Mock;
@@ -119,13 +118,13 @@ public class MediumClientTest {
         return builder.toString();
     }
 
-    @Ignore
-    public void testExchangeAuthoriazationCode() {
+    @Test
+    public void testExchangeAuthorizationCode() {
 
         // Arrange
         final String exchangeUrl = TEST_ENDPOINT + "/tokens";
         final String mockJson = TestUtils.getResourceContents("access-token.json");
-        when(http.get(eq(exchangeUrl))).thenReturn(mockJson);
+        when(http.post(eq(exchangeUrl), anyString())).thenReturn(mockJson);
 
         // Act
         AccessToken token = medium.exchangeAuthorizationCode("", "");
@@ -137,13 +136,13 @@ public class MediumClientTest {
         );
     }
 
-    @Ignore
+    @Test
     public void testExchangeRefreshToken() {
 
         // Arrange
         final String exchangeUrl = TEST_ENDPOINT + "/tokens";
         final String mockJson = TestUtils.getResourceContents("access-token.json");
-        when(http.get(eq(exchangeUrl))).thenReturn(mockJson);
+        when(http.post(eq(exchangeUrl), anyString())).thenReturn(mockJson);
 
         // Act
         AccessToken token = medium.exchangeRefreshToken("");

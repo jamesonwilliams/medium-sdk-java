@@ -23,6 +23,8 @@ import com.medium.api.dependencies.json.JacksonModelConverter;
 import com.medium.api.dependencies.json.JsonModelConverter;
 import com.medium.api.test.TestUtils;
 
+import org.json.JSONException;
+
 import org.junit.Test;
 import org.junit.Before;
 
@@ -108,7 +110,7 @@ public class PostTest {
     }
 
     @Test
-    public void testAsPost_HappyPath() {
+    public void testAsPost_HappyPath() throws JSONException {
         final Post post = new Post(
             TEST_ID,
             TEST_TITLE,

@@ -24,7 +24,7 @@ import com.medium.api.auth.RefreshTokenRequest;
 import com.medium.api.auth.Scope;
 
 import com.medium.api.dependencies.http.HttpClient;
-import com.medium.api.dependencies.http.UnirestHttpClient;
+import com.medium.api.dependencies.http.OkayHttpClient;
 import com.medium.api.dependencies.json.JacksonModelConverter;
 import com.medium.api.dependencies.json.JsonModelConverter;
 
@@ -71,7 +71,7 @@ public class MediumClient implements Medium {
      */
     public MediumClient(final Credentials credentials) {
         this.endpoint = Endpoint.API_BASE;
-        this.httpClient = new UnirestHttpClient();
+        this.httpClient = new OkayHttpClient();
         this.converter = new JacksonModelConverter();
         this.credentials = credentials;
     }
@@ -211,7 +211,7 @@ public class MediumClient implements Medium {
         public Builder() {
             this.converter = new JacksonModelConverter();
             this.endpoint = Endpoint.API_BASE;
-            this.httpClient = new UnirestHttpClient(accessToken);
+            this.httpClient = new OkayHttpClient(accessToken);
         }
 
         /**

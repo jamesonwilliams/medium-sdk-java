@@ -3,16 +3,6 @@
 # medium-sdk-java
 A Java Client for the Medium.com API
 
-## Work in Progress
-
-This is actively under development and should not yet be considered
-stable. Gating issues are:
-
- - Story around eror handling and logging needs improvement
- - Needs a bit of work to be usable on Android
- - Image upload is not implemented.
- - Low test coverage
-
 ## Demo
 
 ### config
@@ -148,11 +138,27 @@ private static void listenForAccessToken(final AccessProvider.Observer observer)
 
 ## Dependencies
 
-### Unirest 1.4.9+
+### OkHttp 3+
 
-The project uses the [Unirest HTTP library][unirest]. If you want to use
+The project uses the [OkHttp][okhttp] HTTP client. If you want to use
 something else, you can use your own implementation of the generic
-`HttpClient` interface. The one currently used is `UnirestClient`.
+`HttpClient` interface. The one currently used is `OkayHttpClient`.
+
+**If your project already uses OkHttp elsewhere, you probably want to
+recycle the instance**. By default, we will create our own internal
+OkHttpClient. Use:
+
+```java
+...
+// Existing instance
+OkHttpClient myExistingOkHttpInstance = new OkHttpClient();
+...
+
+Medium medium = new MediumClient.Builder()
+    .withHttpClient(new OkayHttpClient(myExistingOkHttpInstance))
+    .withAccessToken("my Medium.com access token")
+    .build();
+```
 
 ### Jackson 2+
 
@@ -172,14 +178,14 @@ syntactic fluff, the current decision seems to be the best.
 ## Doing Custom Stuff
 
 If you don't want to use this stuff for whatever reason, you can
-customize stuff via the `MediumClient.Builder`:
+customize stuff via the `MediumClient.Builder`.
 
 ```java
 Medium medium = new MediumClient.Builder()
     .withHttpClient(new HttpClient() {
         @Override
         public String get(final String url) {
-            // Logic to GET an URL
+            // Logic to GET from an URL
         }
 
         @Override
@@ -206,7 +212,16 @@ Medium medium = new MediumClient.Builder()
     .build();
 ```
 
-[unirest]: https://github.com/Mashape/unirest-java
+## Ongoing Work
+
+ - Story around eror handling and logging needs improvement
+ - Needs a bit of work to be usable on Android
+ - Image upload is not implemented.
+ - Poor test coverage
+ - Others
+
+
+[okhttp]: https://github.com/square/okhttp
 [jackson]: https://github.com/FasterXML/jackson
 [settings]: https://medium.com/me/settings
 

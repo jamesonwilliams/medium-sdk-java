@@ -22,6 +22,8 @@ import com.medium.api.dependencies.json.JacksonModelConverter;
 import com.medium.api.dependencies.json.JsonModelConverter;
 import com.medium.api.test.TestUtils;
 
+import org.json.JSONException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -99,7 +101,7 @@ public class AccessTokenTest {
      * Test serialization.
      */
     @Test
-    public void testAsJson_AccessToken_HappyPath() {
+    public void testAsJson_AccessToken_HappyPath() throws JSONException {
         // Act
         final String actualJson =
             converter.asJson(ARRANGED_ACCESS_TOKEN);

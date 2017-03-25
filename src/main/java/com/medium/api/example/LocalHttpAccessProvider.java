@@ -25,14 +25,12 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.utils.URLEncodedUtils;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * LocalHttpAccessProvider listens on the port specified in the
@@ -41,8 +39,8 @@ import java.util.List;
  * Upon obtaining the authorization code, the LocalHttpAccessProvider
  * will invoke the Medium API to exchange it for a bearer token.
  *
- * This is adapted (significantly) from Square's Connect API Examples
- * project:
+ * Inspriation for this (although it is now largely rewriteen) was taken
+ * from Square's Connect API Examples project:
  *
  * https://github.com/square/connect-api-examples/blob/master/connect-examples/oauth/java/src/main/java/com/squareup/oauthexample/OAuthHandler.java
  */
@@ -66,6 +64,11 @@ public class LocalHttpAccessProvider implements AccessProvider {
     private Observer observer;
 
     /**
+     * The HTTP server listening for auth codes.
+     */
+    private HttpServer server;
+
+    /**
      * Constructs a new LocalHttpAccessProvider.
      *
      * @param medium the medium client
@@ -80,6 +83,7 @@ public class LocalHttpAccessProvider implements AccessProvider {
             final Medium medium,
             final String redirectUri,
             final AccessProvider.Observer observer) {
+
         this.medium = medium;
         this.redirectUri = getUriFromString(redirectUri);
         this.observer = observer;
@@ -93,7 +97,7 @@ public class LocalHttpAccessProvider implements AccessProvider {
     public void listenForAuthorizationCodes() {
         try {
             int portNumber = redirectUri.getPort();
-            HttpServer server = HttpServer.create(new InetSocketAddress(portNumber), 0);
+            server = HttpServer.create(new InetSocketAddress(portNumber), 0);
             server.createContext(redirectUri.getPath(), new CallbackHandler());
             server.setExecutor(null);
             server.start();
@@ -122,6 +126,59 @@ public class LocalHttpAccessProvider implements AccessProvider {
     }
 
     /**
+     * Notifies the observer that we have obtained a valid access token
+     * (or not.)
+     *
+     * @param token the token that is available; if none, provide null
+     */
+    private void notifyObserver(final AccessToken token) {
+        if (null != token && null != token.getAccessToken()) {
+            observer.onAccessGranted(token);
+        } else {
+            observer.onAccessError();
+        }
+    }
+
+    /**
+     * Extracts the authorization code parameter value from a map of
+     * query parameters.
+     *
+     * @param uri the uri from which to extract an auth code
+     *
+     * @return the auth code if found; null, otherwise.
+     */
+    private String extractAuthorizationCode(final URI uri) {
+        final Map<String, String> parameters =
+            getQueryParameters(uri.getQuery());
+
+        for (Map.Entry<String, String> parameter : parameters.entrySet()) {
+            if (parameter.getKey().equals("code")) {
+                return parameter.getValue();
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the parameters inside a query string, as a map.
+     *
+     * @param query the query string portion of an URL
+     *
+     * @return the parameters in the query as a name value map
+     */
+    private static Map<String, String> getQueryParameters(final String query) {
+        final String[] parameters = query.split("&");
+        final Map<String, String> map = new HashMap<String, String>();
+
+        for (String parameter : parameters) {
+            map.put(parameter.split("=")[0], parameter.split("=")[1]);
+        }
+
+        return map;
+    }
+
+    /**
      * Serves requests from Square to your application's redirect URL
      * Note that you need to set your application's Redirect URL to
      * the one you set in the application dashboard.
@@ -131,52 +188,43 @@ public class LocalHttpAccessProvider implements AccessProvider {
         /**
          * Handles an HTTP exchange.
          *
-         * TODO: clean this up more.
-         *
-         * @param t the http exchange to handle
+         * @param exchange the http exchange to handle
          *
          * @throws IOException
          *         If we can't interact with the exchange
          */
-        public void handle(HttpExchange t) throws IOException {
+        public void handle(HttpExchange exchange) throws IOException {
 
-            System.out.println("Request received: " + t.getRequestURI().toString());
+            System.out.println("Request received: "
+                + exchange.getRequestURI().toString());
 
-            if (!t.getRequestMethod().equals("GET")) {
-                t.sendResponseHeaders(405, 0);
-                t.getResponseBody().close();
+            if (!exchange.getRequestMethod().equals("GET")) {
+                exchange.sendResponseHeaders(405, 0);
+                exchange.getResponseBody().close();
             }
 
             // Extract the returned authorization code from the URL
-            URI requestUri = t.getRequestURI();
-            List<NameValuePair> queryParameters =
-                URLEncodedUtils.parse(requestUri, "UTF-8");
-            String authorizationCode = null;
-            for (NameValuePair param : queryParameters) {
-                if (param.getName().equals("code")) {
-                    authorizationCode = param.getValue();
-                    break;
-                }
-            }
+            final String authorizationCode =
+                extractAuthorizationCode(exchange.getRequestURI());
 
             if (authorizationCode == null) {
                 // The request to the Redirect URL did not include an
                 // authorization code.  Something went wrong.
-                observer.onAccessError();
-                t.sendResponseHeaders(200, 0); // ... 200?
-                t.getResponseBody().close();
+                notifyObserver(null);
+                exchange.sendResponseHeaders(200, 0); // ... 200?
+                exchange.getResponseBody().close();
+                server.stop(0);
                 return;
             }
 
-            AccessToken token =
-                medium.exchangeAuthorizationCode(authorizationCode, redirectUri.toString());
+            notifyObserver(medium.exchangeAuthorizationCode(
+                authorizationCode, redirectUri.toString()
+            ));
 
-            t.sendResponseHeaders(200, 0);
-            t.getResponseBody().close();
+            exchange.sendResponseHeaders(200, 0);
+            exchange.getResponseBody().close();
 
-            if (null != token && null != token.getAccessToken()) {
-                observer.onAccessGranted(token);
-            }
+            server.stop(0);
         }
     }
 }

@@ -22,6 +22,8 @@ import com.medium.api.dependencies.json.JacksonModelConverter;
 import com.medium.api.dependencies.json.JsonModelConverter;
 import com.medium.api.test.TestUtils;
 
+import org.json.JSONException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -98,7 +100,7 @@ public class PublicationTest {
      * Test serialization of a list of Publications.
      */
     @Test
-    public void testAsJson_Publication_HappyPath() {
+    public void testAsJson_Publication_HappyPath() throws JSONException {
         // We have to account for the data envelope that was stripped
         // out -- add it back (it exists in the test document.)
         final String actualJson = TestUtils.wrapInEnvelope(

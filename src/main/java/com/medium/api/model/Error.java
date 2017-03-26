@@ -23,6 +23,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Error defines an error received when making a request to the API.
  */
 public class Error extends RuntimeException {
+
+    /**
+     * The name of the JSON key for the code.
+     */
+    private static final String JSON_KEY_CODE = "code";
+
+    /**
+     * The name of the JSON key for the message.
+     */
+    private static final String JSON_KEY_MESSAGE = "message";
+
     /**
      * The http status code.
      */
@@ -35,9 +46,9 @@ public class Error extends RuntimeException {
      * @param code the error code
      */
     @JsonCreator
-    public Error(
-            @JsonProperty("code") final int code,
-            @JsonProperty("message") final String message) {
+    private Error(
+            @JsonProperty(JSON_KEY_CODE)   final int code,
+            @JsonProperty(JSON_KEY_MESSAGE)final String message) {
 
         super(message);
         this.code = code;

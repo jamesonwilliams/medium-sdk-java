@@ -149,7 +149,7 @@ public class Post {
      * @param licenseUrl the url to the license
      */
     @JsonCreator
-    public Post(
+    private Post(
             @JsonProperty(JSON_KEY_ID)            final String id,
             @JsonProperty(JSON_KEY_TITLE)         final String title,
             @JsonProperty(JSON_KEY_AUTHOR_ID)     final String authorId,

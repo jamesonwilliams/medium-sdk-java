@@ -26,6 +26,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class User {
 
     /**
+     * The name of the JSON key for the id.
+     */
+    private static final String JSON_KEY_ID = "id";
+
+    /**
+     * The name of the JSON key for the username.
+     */
+    private static final String JSON_KEY_USERNAME = "username";
+
+    /**
+     * The name of the JSON key for the name.
+     */
+    private static final String JSON_KEY_NAME = "name";
+
+    /**
+     * The name of the JSON key for the URL.
+     */
+    private static final String JSON_KEY_URL = "url";
+
+    /**
+     * The name of the JSON key for the image URL.
+     */
+    private static final String JSON_KEY_IMAGE_URL = "imageUrl";
+
+    /**
      * A unique identifier for the user.
      */
     private String id;
@@ -60,12 +85,12 @@ public class User {
      * @param imageUrl url to the user's avatar
      */
     @JsonCreator
-    public User(
-            @JsonProperty("id")       final String id,
-            @JsonProperty("username") final String username,
-            @JsonProperty("name")     final String name,
-            @JsonProperty("url")      final String url,
-            @JsonProperty("imageUrl") final String imageUrl) {
+    private User(
+            @JsonProperty(JSON_KEY_ID)       final String id,
+            @JsonProperty(JSON_KEY_USERNAME) final String username,
+            @JsonProperty(JSON_KEY_NAME)     final String name,
+            @JsonProperty(JSON_KEY_URL)      final String url,
+            @JsonProperty(JSON_KEY_IMAGE_URL)final String imageUrl) {
 
         this.id = id;
         this.username = username;

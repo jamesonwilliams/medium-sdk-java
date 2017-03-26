@@ -27,6 +27,21 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Contributor {
 
     /**
+     * The name of the JSON key for the publication id.
+     */
+    private static final String JSON_KEY_PUBLICATION_ID = "publicationId";
+
+    /**
+     * The name of the JSON key for the user id.
+     */
+    private static final String JSON_KEY_USER_ID = "userId";
+
+    /**
+     * The name of the JSON key for the role.
+     */
+    private static final String JSON_KEY_ROLE = "role";
+
+    /**
      *  An ID for the publication.
      */
     private final String publicationId;
@@ -52,10 +67,10 @@ public class Contributor {
      *             publication
      */
     @JsonCreator
-    public Contributor(
-            @JsonProperty("publicationId") final String publicationId,
-            @JsonProperty("userId")        final String userId,
-            @JsonProperty("role")          final Role role) {
+    private Contributor(
+            @JsonProperty(JSON_KEY_PUBLICATION_ID)final String publicationId,
+            @JsonProperty(JSON_KEY_USER_ID)       final String userId,
+            @JsonProperty(JSON_KEY_ROLE)          final Role role) {
 
         this.publicationId = publicationId;
         this.userId = userId;

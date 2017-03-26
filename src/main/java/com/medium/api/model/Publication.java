@@ -26,6 +26,31 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Publication {
 
     /**
+     * The name of the JSON key for the id.
+     */
+    private static final String JSON_KEY_ID = "id";
+
+    /**
+     * The name of the JSON key for the name.
+     */
+    private static final String JSON_KEY_NAME = "name";
+
+    /**
+     * The name of the JSON key for the description.
+     */
+    private static final String JSON_KEY_DESCRIPTION = "description";
+
+    /**
+     * The name of the JSON key for the URL.
+     */
+    private static final String JSON_KEY_URL = "url";
+
+    /**
+     * The name of the JSON key for the image URL.
+     */
+    private static final String JSON_KEY_IMAGE_URL = "imageUrl";
+
+    /**
      * A unique identifier for the publication.
      */
     private String id;
@@ -60,12 +85,12 @@ public class Publication {
      * @param imageUrl the url of the publication image/icon
      */
     @JsonCreator
-    public Publication(
-            @JsonProperty("id") final String id,
-            @JsonProperty("name") final String name,
-            @JsonProperty("description") final String description,
-            @JsonProperty("url") final String url,
-            @JsonProperty("imageUrl") final String imageUrl) {
+    private Publication(
+            @JsonProperty(JSON_KEY_ID)         final String id,
+            @JsonProperty(JSON_KEY_NAME)       final String name,
+            @JsonProperty(JSON_KEY_DESCRIPTION)final String description,
+            @JsonProperty(JSON_KEY_URL)        final String url,
+            @JsonProperty(JSON_KEY_IMAGE_URL)  final String imageUrl) {
 
         this.id = id;
         this.name = name;

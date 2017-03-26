@@ -16,10 +16,24 @@
 
 package com.medium.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Image is a simple POJO for representing an image resource on Medium.
  */
 public class Image {
+
+    /**
+     * The name of the JSON key for the url.
+     */
+    private static final String JSON_KEY_URL = "url";
+
+    /**
+     * The name of the JSON key for the MD5.
+     */
+    private static final String JSON_KEY_MD5 = "md5";
+
     /**
      * The URL of the image.
      */
@@ -36,7 +50,11 @@ public class Image {
      * @param url the url of the image on Medium
      * @param md5 An MD5 hash of the image data
      */
-    public Image(final String url, final String md5) {
+    @JsonCreator
+    private Image(
+            @JsonProperty(JSON_KEY_URL) final String url,
+            @JsonProperty(JSON_KEY_MD5) final String md5) {
+
         this.url = url;
         this.md5 = md5;
     }

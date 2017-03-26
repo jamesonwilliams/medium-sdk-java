@@ -38,19 +38,47 @@ import java.util.Date;
  */
 public class PostTest {
 
-    private static final String TEST_ID = "e6f36a";
-    private static final String TEST_TITLE = "Liverpool FC";
-    private static final String TEST_AUTHOR_ID = "5303d74c64f66366f00cb9b2a94f3251bf5";
-    private static final String TEST_URL = "https://medium.com/@majelbstoat/liverpool-fc-e6f36a";
-    private static final String TEST_CANONICAL_URL = "http://jamietalbot.com/posts/liverpool-fc";
-    private static final String TEST_LICENSE_URL = "https://medium.com/policy/9db0094a1e0f";
-    private static final Date TEST_PUBLISHED_AT = new Date(1442286338435L);
-    private static final PublishStatus TEST_PUBLISH_STATUS = PublishStatus.PUBLIC;
-    private static final License TEST_LICENSE = License.ALL_RIGHTS_RESERVED;
-    private static final Collection<String> TEST_TAGS =
+    private static final String ARRANGED_ID = "e6f36a";
+    private static final String ARRANGED_TITLE = "Liverpool FC";
+
+    private static final String ARRANGED_AUTHOR_ID =
+        "5303d74c64f66366f00cb9b2a94f3251bf5";
+
+    private static final String ARRANGED_URL =
+        "https://medium.com/@majelbstoat/liverpool-fc-e6f36a";
+
+    private static final String ARRANGED_CANONICAL_URL =
+        "http://jamietalbot.com/posts/liverpool-fc";
+
+    private static final String ARRANGED_LICENSE_URL =
+        "https://medium.com/policy/9db0094a1e0f";
+
+    private static final Date ARRANGED_PUBLISHED_AT =
+        new Date(1442286338435L);
+
+    private static final PublishStatus ARRANGED_PUBLISH_STATUS =
+        PublishStatus.PUBLIC;
+
+    private static final License ARRANGED_LICENSE =
+        License.ALL_RIGHTS_RESERVED;
+
+    private static final Collection<String> ARRANGED_TAGS =
         Arrays.asList("football", "sport", "Liverpool");
 
-    private static final String TEST_JSON =
+    private static final Post ARRANGED_POST = new Post.Builder()
+        .withId(ARRANGED_ID)
+        .withTitle(ARRANGED_TITLE)
+        .withAuthorId(ARRANGED_AUTHOR_ID)
+        .withTags(ARRANGED_TAGS)
+        .withUrl(ARRANGED_URL)
+        .withCanonicalUrl(ARRANGED_CANONICAL_URL)
+        .withPublishStatus(ARRANGED_PUBLISH_STATUS)
+        .withPublishAt(ARRANGED_PUBLISHED_AT)
+        .withLicense(ARRANGED_LICENSE)
+        .withLicenseUrl(ARRANGED_LICENSE_URL)
+        .build();
+
+    private static final String ARRANGED_JSON =
         TestUtils.getResourceContents("post.json");
 
     private final JsonModelConverter converter;
@@ -66,27 +94,18 @@ public class PostTest {
 
     @Test
     public void testBuilderFullArgs() {
-        final Post result = new Post.Builder()
-            .withId(TEST_ID)
-            .withTitle(TEST_TITLE)
-            .withAuthorId(TEST_AUTHOR_ID)
-            .withTags(TEST_TAGS)
-            .withUrl(TEST_URL)
-            .withCanonicalUrl(TEST_CANONICAL_URL)
-            .withPublishStatus(TEST_PUBLISH_STATUS)
-            .withLicense(TEST_LICENSE)
-            .withLicenseUrl(TEST_LICENSE_URL)
-            .build();
+        // Arrange and act have already happened...
 
-        assertEquals(TEST_ID, result.getId());
-        assertEquals(TEST_TITLE, result.getTitle());
-        assertEquals(TEST_AUTHOR_ID, result.getAuthorId());
-        assertEquals(TEST_TAGS, result.getTags());
-        assertEquals(TEST_URL, result.getUrl());
-        assertEquals(TEST_CANONICAL_URL, result.getCanonicalUrl());
-        assertEquals(TEST_PUBLISH_STATUS, result.getPublishStatus());
-        assertEquals(TEST_LICENSE, result.getLicense());
-        assertEquals(TEST_LICENSE_URL, result.getLicenseUrl());
+        // Assert!
+        assertEquals(ARRANGED_ID, ARRANGED_POST.getId());
+        assertEquals(ARRANGED_TITLE, ARRANGED_POST.getTitle());
+        assertEquals(ARRANGED_AUTHOR_ID, ARRANGED_POST.getAuthorId());
+        assertEquals(ARRANGED_TAGS, ARRANGED_POST.getTags());
+        assertEquals(ARRANGED_URL, ARRANGED_POST.getUrl());
+        assertEquals(ARRANGED_CANONICAL_URL, ARRANGED_POST.getCanonicalUrl());
+        assertEquals(ARRANGED_PUBLISH_STATUS, ARRANGED_POST.getPublishStatus());
+        assertEquals(ARRANGED_LICENSE, ARRANGED_POST.getLicense());
+        assertEquals(ARRANGED_LICENSE_URL, ARRANGED_POST.getLicenseUrl());
     }
 
     /**
@@ -94,39 +113,30 @@ public class PostTest {
      */
     @Test
     public void testAsJson_Post_HappyPath() {
-        final Post post = converter.asSingle(Post.class, TEST_JSON);
+        // Act
+        final Post post = converter.asSingle(Post.class, ARRANGED_JSON);
 
-        assertEquals(TEST_ID, post.getId());
-        assertEquals(TEST_TITLE, post.getTitle());
-        assertEquals(TEST_AUTHOR_ID, post.getAuthorId());
-        assertEquals(TEST_TAGS, post.getTags());
-        assertEquals(TEST_URL, post.getUrl());
-        assertEquals(TEST_CANONICAL_URL, post.getCanonicalUrl());
-        assertEquals(TEST_PUBLISH_STATUS, post.getPublishStatus());
-        assertEquals(TEST_PUBLISHED_AT, post.getPublishedAt());
-        assertEquals(TEST_LICENSE, post.getLicense());
-        assertEquals(TEST_LICENSE_URL, post.getLicenseUrl());
+        // Assert
+        assertEquals(ARRANGED_ID, post.getId());
+        assertEquals(ARRANGED_TITLE, post.getTitle());
+        assertEquals(ARRANGED_AUTHOR_ID, post.getAuthorId());
+        assertEquals(ARRANGED_TAGS, post.getTags());
+        assertEquals(ARRANGED_URL, post.getUrl());
+        assertEquals(ARRANGED_CANONICAL_URL, post.getCanonicalUrl());
+        assertEquals(ARRANGED_PUBLISH_STATUS, post.getPublishStatus());
+        assertEquals(ARRANGED_PUBLISHED_AT, post.getPublishedAt());
+        assertEquals(ARRANGED_LICENSE, post.getLicense());
+        assertEquals(ARRANGED_LICENSE_URL, post.getLicenseUrl());
     }
 
     @Test
     public void testAsPost_HappyPath() throws JSONException {
-        final Post post = new Post(
-            TEST_ID,
-            TEST_TITLE,
-            TEST_AUTHOR_ID,
-            TEST_TAGS,
-            TEST_URL,
-            TEST_CANONICAL_URL,
-            TEST_PUBLISH_STATUS,
-            TEST_PUBLISHED_AT,
-            TEST_LICENSE,
-            TEST_LICENSE_URL
+        // Act-n-Assert Combo-Pak 2-4-1
+        JSONAssert.assertEquals(
+            ARRANGED_JSON,
+            TestUtils.wrapInEnvelope(converter.asJson(ARRANGED_POST)),
+            false
         );
-
-        final String json =
-            TestUtils.wrapInEnvelope(converter.asJson(post));
-
-        JSONAssert.assertEquals(TEST_JSON, json, false);
     }
 }
 
